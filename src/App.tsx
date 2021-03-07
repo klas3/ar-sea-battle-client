@@ -1,6 +1,7 @@
 import React, { Suspense, useEffect } from 'react';
 import { Canvas, useThree } from 'react-three-fiber';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import FriendlyBattlefield from './FriendlyBattlefield';
 import Model3D from './Model3D';
 import Ocean from './Ocean';
 
@@ -34,8 +35,9 @@ const Scene = () => {
     <Canvas camera={{ position: [10, 80, 8] }}>
       <CameraController />
       <Ocean />
+      <FriendlyBattlefield />
       <Suspense fallback={<Box />}>
-        <Model3D scale={1} position={[0, 0, 0]} path={'models/large-ship.glb'} />
+        <Model3D scale={1.4} position={[0, 0, 0]} path={'models/large-ship.glb'} />
         <Model3D scale={0.005} position={[0, 0.6, 15]} path={'models/small-ship.glb'} />
       </Suspense>
     </Canvas>
