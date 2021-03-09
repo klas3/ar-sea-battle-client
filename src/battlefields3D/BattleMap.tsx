@@ -1,11 +1,10 @@
 import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { PerspectiveCamera, ShaderMaterial } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Sky } from 'three/examples/jsm/objects/Sky.js';
 import { Water } from 'three/examples/jsm/objects/Water.js';
 
-const Ocean = () => {
+const BattleMap = () => {
   const { scene, camera: threeCamera, gl: renderer } = useThree();
 
   const camera = threeCamera as PerspectiveCamera;
@@ -71,13 +70,6 @@ const Ocean = () => {
 
   updateSun();
 
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.maxPolarAngle = Math.PI * 0.495;
-  controls.target.set(0, 10, 0);
-  controls.minDistance = 40.0;
-  controls.maxDistance = 200.0;
-  controls.update();
-
   const onWindowResize = () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -94,4 +86,4 @@ const Ocean = () => {
   return null;
 };
 
-export default Ocean;
+export default BattleMap;

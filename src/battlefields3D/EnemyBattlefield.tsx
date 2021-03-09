@@ -1,43 +1,32 @@
 import { useEffect, useState } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-
-const gridCellsCount = 10;
-const gridSize = 200;
-const planeDefaultHeight = 1;
-const planeMaterial = { visible: false, color: 'red' };
+import { planeDefaultHeight, planeMaterial } from '../other/constants';
+import gridCreator from '../other/gridHelper';
 
 interface IProps {
   additionalX?: number;
   additionalZ?: number;
 }
 
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-
-const FriendlyBattlefield = (props: IProps) => {
+const EnemyBattlefield = (props: IProps) => {
   const [planes, setPlanes] = useState<THREE.Mesh[]>([]);
   const { scene, camera, gl: renderer } = useThree();
 
   const { additionalX = 0, additionalZ = 0 } = props;
 
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+
   const addGridInteraction = () => {
-    const geometrySize = gridSize / gridCellsCount;
-    const geometry = new THREE.PlaneGeometry(geometrySize, geometrySize);
-    geometry.rotateX(-Math.PI / 2);
-    const createdPlanes: THREE.Mesh[] = [];
-    for (let i = 0; i < gridCellsCount * gridCellsCount; i += 1) {
-      const plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial(planeMaterial));
-      plane.userData = { i };
-      plane.position.set(
-        Math.floor(i / gridCellsCount) * geometrySize - gridSize / 2 + gridCellsCount + additionalX,
-        planeDefaultHeight,
-        (i % gridCellsCount) * geometrySize - gridSize / 2 + gridCellsCount + additionalZ,
-      );
-      scene.add(plane);
-      createdPlanes.push(plane);
-    }
-    setPlanes(createdPlanes);
+    const planes = gridCreator.addPlanes(
+      planeMaterial,
+      additionalX,
+      planeDefaultHeight,
+      additionalZ,
+    );
+    planes.forEach((plane) => scene.add(plane));
+    setPlanes(planes);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,11 +34,7 @@ const FriendlyBattlefield = (props: IProps) => {
 
   const render = () => renderer.render(scene, camera);
 
-  const gridHelper = new THREE.GridHelper(gridSize, gridCellsCount);
-  gridHelper.position.y += 1;
-  gridHelper.position.x += additionalX;
-  gridHelper.position.z += additionalZ;
-  scene.add(gridHelper);
+  scene.add(gridCreator.createGrid(additionalX, planeDefaultHeight, additionalZ));
 
   const markCell = (mouseX: number, mouseY: number) => {
     mouse.x = mouseX;
@@ -57,7 +42,6 @@ const FriendlyBattlefield = (props: IProps) => {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(planes);
     if (intersects.length > 0) {
-      console.log(intersects[0].object.userData);
       const material = planes[intersects[0].object.userData.i as number]
         .material as THREE.MeshBasicMaterial;
       material.visible = true;
@@ -84,4 +68,4 @@ const FriendlyBattlefield = (props: IProps) => {
   return null;
 };
 
-export default FriendlyBattlefield;
+export default EnemyBattlefield;
