@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import LoadingBox from '../models3D/LoadingBox';
 import Model3D from '../models3D/Model3D';
-import { diractionalRay, planeDefaultHeight, raycaster } from '../other/constants';
+import { diractionalRay, planeDefaultHeight, raycaster, draggableLimit } from '../other/constants';
 import gridCreator from '../other/gridHelper';
 import gameService from '../services/gameService';
 
@@ -17,11 +17,6 @@ const ArrangementBattlefield = (props: IProps) => {
   const [planes, setPlanes] = useState<THREE.Mesh[]>([]);
   const { scene, camera, gl: renderer } = useThree();
   const { additionalX = 0, additionalZ = 0 } = props;
-
-  const draggableLimit = {
-    min: new THREE.Vector3(-160, 1, -100),
-    max: new THREE.Vector3(160, 1, 100),
-  };
 
   const addGridInteraction = () => {
     const planes = gridCreator.addPlanes(
@@ -44,7 +39,9 @@ const ArrangementBattlefield = (props: IProps) => {
 
   const registerShipModel = (gltf: GLTF) => gameService.addShip(gltf);
 
-  const markCell = (event: THREE.Event) => {
+  const getPlaneMaterial = (index: number) => planes[index].material as THREE.MeshBasicMaterial;
+
+  const tryMarkCell = (event: THREE.Event, shipSize: number) => {
     const position = event.object.position;
     position.set(position.x, planeDefaultHeight, position.z);
 
@@ -56,8 +53,30 @@ const ArrangementBattlefield = (props: IProps) => {
 
     planes.forEach((plane) => ((plane.material as THREE.MeshBasicMaterial).visible = false));
     intersects.forEach((intersect) => {
-      const material = planes[intersect.object.userData.index].material as THREE.MeshBasicMaterial;
-      material.visible = true;
+      const planeIndex = intersect.object.userData.index;
+      const planeMaterialsArray = [];
+      const furtherShipPoint = planeIndex + (shipSize === 4 ? 2 : shipSize === 1 ? 0 : 1);
+      const nearestShipPoint = planeIndex - (shipSize > 2 ? 1 : 0);
+      const planesRowNumber = Math.floor(planeIndex / 10);
+      const isValid =
+        Math.floor(furtherShipPoint / 10) === planesRowNumber &&
+        Math.floor(nearestShipPoint / 10) === planesRowNumber;
+      if (!isValid) {
+        return;
+      }
+      if (shipSize >= 1) {
+        planeMaterialsArray.push(getPlaneMaterial(planeIndex));
+      }
+      if (shipSize >= 2) {
+        planeMaterialsArray.push(getPlaneMaterial(planeIndex + 1));
+      }
+      if (shipSize >= 3) {
+        planeMaterialsArray.push(getPlaneMaterial(planeIndex - 1));
+      }
+      if (shipSize >= 4) {
+        planeMaterialsArray.push(getPlaneMaterial(planeIndex + 2));
+      }
+      planeMaterialsArray.forEach((material) => (material.visible = true));
     });
   };
 
@@ -68,7 +87,7 @@ const ArrangementBattlefield = (props: IProps) => {
   return (
     <Suspense fallback={<LoadingBox />}>
       <Model3D
-        onDrag={markCell}
+        onDrag={(event) => tryMarkCell(event, 1)}
         reference={registerShipModel}
         scale={0.005}
         draggableLimit={draggableLimit}
@@ -76,7 +95,7 @@ const ArrangementBattlefield = (props: IProps) => {
         path={'models/small-ship.glb'}
       />
       <Model3D
-        onDrag={markCell}
+        onDrag={(event) => tryMarkCell(event, 3)}
         reference={registerShipModel}
         scale={1.4}
         draggableLimit={draggableLimit}

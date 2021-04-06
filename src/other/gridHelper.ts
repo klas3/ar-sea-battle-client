@@ -26,9 +26,9 @@ class GridCreator {
       plane.userData = { index: i };
 
       plane.position.set(
-        Math.floor(i / gridCellsCount) * geometrySize - gridSize / 2 + gridCellsCount + additionalX,
-        additionalY,
         (i % gridCellsCount) * geometrySize - gridSize / 2 + gridCellsCount + additionalZ,
+        additionalY,
+        Math.floor(i / gridCellsCount) * geometrySize - gridSize / 2 + gridCellsCount + additionalX,
       );
 
       createdPlanes.push(plane);

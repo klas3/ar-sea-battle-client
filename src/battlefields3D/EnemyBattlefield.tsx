@@ -42,7 +42,8 @@ const EnemyBattlefield = (props: IProps) => {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(planes);
     if (intersects.length > 0) {
-      const material = planes[intersects[0].object.userData.i as number]
+      console.log(intersects[0].object.userData.index);
+      const material = planes[intersects[0].object.userData.index]
         .material as THREE.MeshBasicMaterial;
       material.visible = true;
     }

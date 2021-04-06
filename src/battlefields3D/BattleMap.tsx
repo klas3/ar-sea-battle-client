@@ -16,7 +16,7 @@ const BattleMap = () => {
   const water = new Water(waterGeometry, {
     textureWidth: 512,
     textureHeight: 512,
-    waterNormals: new THREE.TextureLoader().load('textures/waternormals.jpg', function (texture) {
+    waterNormals: new THREE.TextureLoader().load('textures/waternormals.jpg', (texture) => {
       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
     }),
     alpha: 1.0,
