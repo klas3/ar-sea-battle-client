@@ -21,7 +21,7 @@ class GridCreator {
     geometry.rotateX(-Math.PI / 2);
 
     const createdPlanes: THREE.Mesh[] = [];
-    for (let i = 0; i < gridCellsCount * gridCellsCount; i += 1) {
+    for (let i = 0; i < gridCellsCount ** 2; i += 1) {
       const plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial(material));
       plane.userData = { index: i };
 

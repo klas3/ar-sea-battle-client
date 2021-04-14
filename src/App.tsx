@@ -1,4 +1,3 @@
-import React from 'react';
 import { Canvas } from 'react-three-fiber';
 import ArrangementBattlefield from './battlefields3D/ArrangementBattlefield';
 import CameraController from './CameraController';

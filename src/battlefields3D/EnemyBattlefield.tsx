@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import { planeDefaultHeight, planeMaterial } from '../other/constants';
+import { planeDefaultHeight, battlePlaneMaterial, raycaster, mouse } from '../other/constants';
 import gridCreator from '../other/gridHelper';
 
 interface IProps {
@@ -15,12 +15,9 @@ const EnemyBattlefield = (props: IProps) => {
 
   const { additionalX = 0, additionalZ = 0 } = props;
 
-  const raycaster = new THREE.Raycaster();
-  const mouse = new THREE.Vector2();
-
   const addGridInteraction = () => {
     const planes = gridCreator.addPlanes(
-      planeMaterial,
+      battlePlaneMaterial,
       additionalX,
       planeDefaultHeight,
       additionalZ,
@@ -42,7 +39,6 @@ const EnemyBattlefield = (props: IProps) => {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(planes);
     if (intersects.length > 0) {
-      console.log(intersects[0].object.userData.index);
       const material = planes[intersects[0].object.userData.index]
         .material as THREE.MeshBasicMaterial;
       material.visible = true;
