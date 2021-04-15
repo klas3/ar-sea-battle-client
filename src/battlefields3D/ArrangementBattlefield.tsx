@@ -10,12 +10,16 @@ import {
   draggableLimit,
   shipSizesAdditions,
   arrangementPlaneMaterial,
+  shipRotationStep,
+  shipMaxRotation,
+  shipDraggingAddition,
 } from '../other/constants';
 import gridCreator from '../other/gridHelper';
 import gameService from '../services/gameService';
 import { Object3D } from 'three';
 import { ShipConfig } from '../other/types';
 import getDefaultShipsConfigs from '../other/shipsConfigs';
+import { getSegmentMidpoint } from '../other/helpers';
 
 interface IProps {
   additionalX?: number;
@@ -54,12 +58,10 @@ const ArrangementBattlefield = (props: IProps) => {
   const uncolorPlanes = () =>
     planes.forEach((plane) => ((plane.material as THREE.MeshBasicMaterial).visible = false));
 
-  const emptyShipPositions = (positions: number[]) => {
+  const emptyShipPositions = (positions: number[]) =>
     positions.forEach((planePosition: number) => {
       gameService.positions[planePosition] = 0;
     });
-    positions.length = 0;
-  };
 
   const tryMarkCell = (event: THREE.Event) => {
     const position = event.object.position;
@@ -73,9 +75,9 @@ const ArrangementBattlefield = (props: IProps) => {
       const shipIndex = event.object.userData.index;
       const x = shipsConfigs[shipIndex].isTurnedHorizontally
         ? position.x + shipSizesAdditions[i]
-        : position.x + 5;
+        : position.x + shipDraggingAddition;
       const z = shipsConfigs[shipIndex].isTurnedHorizontally
-        ? position.z + 5
+        ? position.z + shipDraggingAddition
         : position.z + shipSizesAdditions[i];
       raycaster.set({ ...position, x, z }, diractionalRay);
       const intersects = raycaster.intersectObjects(planes);
@@ -85,6 +87,7 @@ const ArrangementBattlefield = (props: IProps) => {
     }
 
     emptyShipPositions(planePositions);
+    planePositions.length = 0;
 
     if (intersections.length !== size) {
       return;
@@ -111,16 +114,18 @@ const ArrangementBattlefield = (props: IProps) => {
 
     if (!markedPlanes.length) {
       const { position } = getDefaultShipsConfigs()[event.object.userData.index];
-      objectPosition.set(position[0], position[1], position[2]);
+      const [defaultX, defaultY, defaultZ] = position;
+      objectPosition.set(defaultX, defaultY, defaultZ);
       emptyShipPositions(shipPlanePositions);
+      shipPlanePositions.length = 0;
       return;
     }
 
     const lastPlaneIndex = markedPlanes.length - 1;
-    const middleXPoint = (markedPlanes[0].position.x + markedPlanes[lastPlaneIndex].position.x) / 2;
-    const middleZPoint = (markedPlanes[0].position.z + markedPlanes[lastPlaneIndex].position.z) / 2;
-    objectPosition.setX(middleXPoint);
-    objectPosition.setZ(middleZPoint);
+    const { x: firstX, z: firstZ } = markedPlanes[0].position;
+    const { x: lastX, z: lastZ } = markedPlanes[lastPlaneIndex].position;
+    objectPosition.setX(getSegmentMidpoint(firstX, lastX));
+    objectPosition.setZ(getSegmentMidpoint(firstZ, lastZ));
     markedPlanes.forEach((plane) => {
       const planeIndex = plane.userData.index;
       gameService.positions[planeIndex] = markedPlanes.length;
@@ -133,7 +138,8 @@ const ArrangementBattlefield = (props: IProps) => {
     setShipsConfigs(
       shipsConfigs.map((config) => {
         config.isTurnedHorizontally = !config.isTurnedHorizontally;
-        config.rotation = config.rotation === 270 ? 0 : config.rotation + 90;
+        config.rotation =
+          config.rotation === shipMaxRotation ? 0 : config.rotation + shipRotationStep;
         return config;
       }),
     );

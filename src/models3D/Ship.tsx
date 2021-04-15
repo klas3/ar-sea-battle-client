@@ -4,6 +4,7 @@ import { DragControls } from 'three/examples/jsm/controls/DragControls';
 import { DraggableLimit, ShipConfig } from '../other/types';
 import { useMemo } from 'react';
 import { Euler, Object3D } from 'three';
+import { convertToDegrees } from '../other/helpers';
 
 extend({ DragControls });
 
@@ -25,7 +26,7 @@ const Ship = (props: IProps) => {
   const copiedScene = useMemo(() => scene.clone(), [scene]);
 
   if (draggableLimit) {
-    copiedScene.setRotationFromEuler(new Euler(0, rotation * (Math.PI / 180), 0));
+    copiedScene.setRotationFromEuler(new Euler(0, convertToDegrees(rotation), 0));
     copiedScene.userData.limit = draggableLimit;
     copiedScene.userData.index = index;
     copiedScene.userData.size = size;
@@ -33,7 +34,8 @@ const Ship = (props: IProps) => {
     copiedScene.userData.update = () =>
       copiedScene.position.clamp(copiedScene.userData.limit.min, copiedScene.userData.limit.max);
 
-    copiedScene.scale.set(scale[0], scale[1], scale[2]);
+    const [scaleX, scaleY, scaleZ] = scale;
+    copiedScene.scale.set(scaleX, scaleY, scaleZ);
     const controls = new DragControls([copiedScene], camera, gl.domElement);
     controls.transformGroup = true;
 

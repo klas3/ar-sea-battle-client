@@ -1,5 +1,3 @@
-import React from 'react';
-
 const LoadingBox = () => (
   <mesh>
     <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />

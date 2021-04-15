@@ -2,7 +2,13 @@ import * as THREE from 'three';
 
 export const gridCellsCount = 10;
 
+export const shipRotationStep = 90;
+
+export const shipMaxRotation = 270;
+
 export const gridSize = 200;
+
+export const shipDraggingAddition = 5;
 
 export const planeDefaultHeight = 1;
 

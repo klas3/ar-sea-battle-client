@@ -26,8 +26,7 @@ const EnemyBattlefield = (props: IProps) => {
     setPlanes(planes);
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(addGridInteraction, []);
+  useEffect(addGridInteraction, [additionalX, additionalZ, scene]);
 
   const render = () => renderer.render(scene, camera);
 
