@@ -1,25 +1,22 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
+import { Object3D } from 'three';
 import LoadingBox from '../models3D/LoadingBox';
 import Ship from '../models3D/Ship';
 import {
   diractionalRay,
   planeDefaultHeight,
   raycaster,
-  draggableLimit,
   shipSizesAdditions,
   arrangementPlaneMaterial,
-  shipRotationStep,
-  shipMaxRotation,
   shipDraggingAddition,
 } from '../other/constants';
 import gridCreator from '../other/gridHelper';
 import gameService from '../services/gameService';
-import { Object3D } from 'three';
-import { ShipConfig } from '../other/types';
 import getDefaultShipsConfigs from '../other/shipsConfigs';
-import { getSegmentMidpoint } from '../other/helpers';
+import { getDraggableLimit, getSegmentMidpoint } from '../other/helpers';
+import { useAppSelector } from '../hooks/reduxHooks';
 
 interface IProps {
   additionalX?: number;
@@ -27,11 +24,13 @@ interface IProps {
 }
 
 const ArrangementBattlefield = (props: IProps) => {
+  const { additionalX = 0, additionalZ = 0 } = props;
+
+  const shipsConfigs = useAppSelector((state) => state.shipsConfigs);
+
   const [planes, setPlanes] = useState<THREE.Mesh[]>([]);
-  const [shipsConfigs, setShipsConfigs] = useState<ShipConfig[]>(getDefaultShipsConfigs());
 
   const { scene, camera, gl: renderer } = useThree();
-  const { additionalX = 0, additionalZ = 0 } = props;
 
   const addGridInteraction = () => {
     const planes = gridCreator.addPlanes(
@@ -113,7 +112,9 @@ const ArrangementBattlefield = (props: IProps) => {
     const markedPlanes = planes.filter((plane) => getPlaneMaterial(plane.userData.index).visible);
 
     if (!markedPlanes.length) {
-      const { position } = getDefaultShipsConfigs()[event.object.userData.index];
+      const { position } = getDefaultShipsConfigs(additionalX, additionalZ)[
+        event.object.userData.index
+      ];
       const [defaultX, defaultY, defaultZ] = position;
       objectPosition.set(defaultX, defaultY, defaultZ);
       emptyShipPositions(shipPlanePositions);
@@ -134,19 +135,11 @@ const ArrangementBattlefield = (props: IProps) => {
     uncolorPlanes();
   };
 
-  const rotateALlShips = () =>
-    setShipsConfigs(
-      shipsConfigs.map((config) => {
-        config.isTurnedHorizontally = !config.isTurnedHorizontally;
-        config.rotation =
-          config.rotation === shipMaxRotation ? 0 : config.rotation + shipRotationStep;
-        return config;
-      }),
-    );
-
   scene.add(gridCreator.createGrid(additionalX, planeDefaultHeight, additionalZ));
 
   useFrame(render);
+
+  const draggableLimit = getDraggableLimit(additionalX, additionalZ);
 
   const renderedShips = shipsConfigs.map((shipConfig, index) => (
     <Ship

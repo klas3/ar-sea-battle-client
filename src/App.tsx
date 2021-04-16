@@ -1,16 +1,27 @@
 import { Canvas } from 'react-three-fiber';
-import ArrangementBattlefield from './battlefields3D/ArrangementBattlefield';
+import { Provider } from 'react-redux';
+import rotateShips from './redux/actions';
 import CameraController from './CameraController';
 import BattleMap from './battlefields3D/BattleMap';
+import ArrangementBattlefield from './battlefields3D/ArrangementBattlefield';
+import { useAppDispatch } from './hooks/reduxHooks';
+import store from './redux/store';
 
-const Scene = () => {
+const App = () => {
+  const dispatch = useAppDispatch();
+
   return (
-    <Canvas camera={{ position: [0, 200, 5] }}>
-      <CameraController enabled={false} />
-      <BattleMap />
-      <ArrangementBattlefield />
-    </Canvas>
+    <>
+      <button onClick={() => dispatch(rotateShips())}>Rotate</button>
+      <Canvas camera={{ position: [0, 175, 5] }}>
+        <Provider store={store}>
+          <CameraController enabled={false} />
+          <BattleMap />
+          <ArrangementBattlefield />
+        </Provider>
+      </Canvas>
+    </>
   );
 };
 
-export default Scene;
+export default App;

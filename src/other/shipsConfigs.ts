@@ -58,13 +58,17 @@ const getShipConfig = (shipSize: ShipSize, positionIndex: number): ShipConfig =>
   size: modelsSizes[shipSize],
   rotation: modelsRotations[shipSize],
   isTurnedHorizontally: true,
+  isPlaced: false,
 });
 
-const getDefaultShipsConfigs = (): ShipConfig[] => {
+const getDefaultShipsConfigs = (additionalX: number, additionalZ: number): ShipConfig[] => {
   const configs = [];
   for (let shipSize = 0; shipSize < maxShipSize; shipSize += 1) {
     for (let shipIndex = 0; shipIndex < maxShipSize - shipSize; shipIndex += 1) {
-      configs.push(getShipConfig(shipsSizesNames[shipSize], shipIndex));
+      const defaultConfgig = getShipConfig(shipsSizesNames[shipSize], shipIndex);
+      defaultConfgig.position[0] += additionalX;
+      defaultConfgig.position[2] += additionalZ;
+      configs.push(defaultConfgig);
     }
   }
   return configs;

@@ -10,6 +10,7 @@ export interface ShipConfig {
   size: number;
   rotation: number;
   isTurnedHorizontally: boolean;
+  isPlaced: boolean;
 }
 
 export type ShipSize = 'small' | 'medium' | 'large' | 'largest';
