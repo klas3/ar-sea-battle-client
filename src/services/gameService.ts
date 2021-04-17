@@ -8,7 +8,7 @@ class GameService {
 
   private leftSideMinRowIndex = 1;
 
-  private rightSideMaxRowIndex = 9;
+  private rightSideMaxRowIndex = 8;
 
   private topSideMinIndex = 10;
 
@@ -19,6 +19,10 @@ class GameService {
   }
 
   public resetShipsPositions = (): number[] => new Array(gridCellsCount ** 2).fill(0);
+
+  public removeAllShips = () => {
+    gameService.ships.length = 0;
+  };
 
   public get positions(): number[] {
     return this.shipsPositions;

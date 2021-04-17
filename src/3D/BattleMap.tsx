@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { PerspectiveCamera, ShaderMaterial } from 'three';
@@ -10,26 +11,29 @@ const BattleMap = () => {
 
   const camera = threeCamera as PerspectiveCamera;
 
-  const waterGeometry = new THREE.PlaneGeometry(mapSize, mapSize);
-
-  const water = new Water(waterGeometry, waterConfig);
-
-  water.rotation.x = -Math.PI / 2;
-
-  scene.add(water);
+  const water = useMemo(() => {
+    const waterGeometry = new THREE.PlaneGeometry(mapSize, mapSize);
+    const mapWater = new Water(waterGeometry, waterConfig);
+    mapWater.rotation.x = -Math.PI / 2;
+    scene.add(mapWater);
+    return mapWater;
+  }, [scene]);
 
   const waterMaterial = water.material as ShaderMaterial;
+  const sky = useMemo(() => {
+    const mapSky = new Sky();
+    mapSky.scale.setScalar(mapSize);
 
-  const sky = new Sky();
-  sky.scale.setScalar(mapSize);
-  scene.add(sky);
+    const skyUniforms = mapSky.material.uniforms;
 
-  const skyUniforms = sky.material.uniforms;
+    skyUniforms.turbidity.value = 10;
+    skyUniforms.rayleigh.value = 2;
+    skyUniforms.mieCoefficient.value = 0.005;
+    skyUniforms.mieDirectionalG.value = 0.8;
 
-  skyUniforms.turbidity.value = 10;
-  skyUniforms.rayleigh.value = 2;
-  skyUniforms.mieCoefficient.value = 0.005;
-  skyUniforms.mieDirectionalG.value = 0.8;
+    scene.add(mapSky);
+    return mapSky;
+  }, [scene]);
 
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
 

@@ -2,8 +2,8 @@ import { Suspense, useEffect, useState } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { Object3D } from 'three';
-import LoadingBox from '../models3D/LoadingBox';
-import Ship from '../models3D/Ship';
+import LoadingBox from './LoadingBox';
+import ShipInitialization from './ShipInitialization';
 import {
   diractionalRay,
   planeDefaultHeight,
@@ -15,8 +15,9 @@ import {
 import gridCreator from '../other/gridHelper';
 import gameService from '../services/gameService';
 import getDefaultShipsConfigs from '../other/shipsConfigs';
-import { getDraggableLimit, getSegmentMidpoint } from '../other/helpers';
-import { useAppSelector } from '../hooks/reduxHooks';
+import { convertToRadians, getDraggableLimit, getSegmentMidpoint } from '../other/helpers';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { setIsPlaced } from '../redux/actions';
 
 interface IProps {
   additionalX?: number;
@@ -27,6 +28,7 @@ const ArrangementBattlefield = (props: IProps) => {
   const { additionalX = 0, additionalZ = 0 } = props;
 
   const shipsConfigs = useAppSelector((state) => state.shipsConfigs);
+  const dispatch = useAppDispatch();
 
   const [planes, setPlanes] = useState<THREE.Mesh[]>([]);
 
@@ -41,6 +43,7 @@ const ArrangementBattlefield = (props: IProps) => {
     );
     planes.forEach((plane) => scene.add(plane));
     setPlanes(planes);
+    scene.add(gridCreator.createGrid(additionalX, planeDefaultHeight, additionalZ));
   };
 
   useEffect(addGridInteraction, [additionalX, additionalZ, scene]);
@@ -108,7 +111,7 @@ const ArrangementBattlefield = (props: IProps) => {
 
   const handleDragEnd = (event: THREE.Event) => {
     const objectPosition = event.object.position;
-    const shipPlanePositions = event.object.userData.planePositions;
+    const { planePositions, index } = event.object.userData;
     const markedPlanes = planes.filter((plane) => getPlaneMaterial(plane.userData.index).visible);
 
     if (!markedPlanes.length) {
@@ -117,8 +120,9 @@ const ArrangementBattlefield = (props: IProps) => {
       ];
       const [defaultX, defaultY, defaultZ] = position;
       objectPosition.set(defaultX, defaultY, defaultZ);
-      emptyShipPositions(shipPlanePositions);
-      shipPlanePositions.length = 0;
+      emptyShipPositions(planePositions);
+      planePositions.length = 0;
+      dispatch(setIsPlaced(index, false));
       return;
     }
 
@@ -130,28 +134,37 @@ const ArrangementBattlefield = (props: IProps) => {
     markedPlanes.forEach((plane) => {
       const planeIndex = plane.userData.index;
       gameService.positions[planeIndex] = markedPlanes.length;
-      shipPlanePositions.push(planeIndex);
+      planePositions.push(planeIndex);
     });
+    dispatch(setIsPlaced(index, true));
     uncolorPlanes();
   };
-
-  scene.add(gridCreator.createGrid(additionalX, planeDefaultHeight, additionalZ));
 
   useFrame(render);
 
   const draggableLimit = getDraggableLimit(additionalX, additionalZ);
 
-  const renderedShips = shipsConfigs.map((shipConfig, index) => (
-    <Ship
-      key={index}
-      index={index}
-      config={shipConfig}
-      onDrag={tryMarkCell}
-      onDragEnd={handleDragEnd}
-      reference={registerShipModel}
-      draggableLimit={draggableLimit}
-    />
-  ));
+  let renderedShips = [];
+
+  if (gameService.ships.length) {
+    renderedShips = gameService.ships.map((shipScene) => {
+      const shipIndex = shipScene.userData.index;
+      shipScene.rotation.y = convertToRadians(shipsConfigs[shipIndex].rotation);
+      return <primitive key={shipIndex} object={shipScene} position={shipScene.position} />;
+    });
+  } else {
+    renderedShips = shipsConfigs.map((shipConfig, index) => (
+      <ShipInitialization
+        key={index}
+        index={index}
+        config={shipConfig}
+        onDrag={tryMarkCell}
+        onDragEnd={handleDragEnd}
+        reference={registerShipModel}
+        draggableLimit={draggableLimit}
+      />
+    ));
+  }
 
   return <Suspense fallback={<LoadingBox />}>{renderedShips}</Suspense>;
 };

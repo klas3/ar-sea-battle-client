@@ -3,8 +3,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DragControls } from 'three/examples/jsm/controls/DragControls';
 import { DraggableLimit, ShipConfig } from '../other/types';
 import { useMemo } from 'react';
-import { Euler, Object3D } from 'three';
-import { convertToDegrees } from '../other/helpers';
+import { Object3D } from 'three';
+import { convertToRadians } from '../other/helpers';
 
 extend({ DragControls });
 
@@ -17,7 +17,7 @@ interface IProps {
   reference?: (gltf: Object3D) => void;
 }
 
-const Ship = (props: IProps) => {
+const ShipInitialization = (props: IProps) => {
   const { config, reference, draggableLimit, onDrag, onDragEnd, index } = props;
   const { path, position, scale, size, rotation } = config;
 
@@ -26,7 +26,7 @@ const Ship = (props: IProps) => {
   const copiedScene = useMemo(() => scene.clone(), [scene]);
 
   if (draggableLimit) {
-    copiedScene.setRotationFromEuler(new Euler(0, convertToDegrees(rotation), 0));
+    copiedScene.rotation.y = convertToRadians(rotation);
     copiedScene.userData.limit = draggableLimit;
     copiedScene.userData.index = index;
     copiedScene.userData.size = size;
@@ -52,4 +52,4 @@ const Ship = (props: IProps) => {
   return <primitive object={copiedScene} position={position} />;
 };
 
-export default Ship;
+export default ShipInitialization;

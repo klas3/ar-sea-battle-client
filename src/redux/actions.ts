@@ -1,7 +1,10 @@
 import { ShipsConfigsAction, ShipsConfigsTypes } from './types';
 
-const rotateShips = (): ShipsConfigsAction => ({
+export const rotateShips = (): ShipsConfigsAction => ({
   type: ShipsConfigsTypes.RotateShips,
 });
 
-export default rotateShips;
+export const setIsPlaced = (shipIndex: number, isPlaced: boolean): ShipsConfigsAction => ({
+  type: ShipsConfigsTypes.SetIsPlaces,
+  payload: { shipIndex, isPlaced },
+});

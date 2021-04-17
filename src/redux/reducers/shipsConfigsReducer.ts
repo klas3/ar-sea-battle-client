@@ -16,6 +16,15 @@ const shipsConfigsReducer = (state = defaultState, action: ShipsConfigsAction) =
       return config;
     });
   }
+  if (action.type === ShipsConfigsTypes.SetIsPlaces && action.payload) {
+    const { isPlaced, shipIndex } = action.payload;
+    return state.map((config, index) => {
+      if (index === shipIndex) {
+        config.isPlaced = isPlaced;
+      }
+      return config;
+    });
+  }
   return state;
 };
 
