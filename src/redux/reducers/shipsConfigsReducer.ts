@@ -7,9 +7,9 @@ import { ShipsConfigsAction } from '../types';
 const defaultState: ShipConfig[] = getDefaultShipsConfigs(0, 0);
 
 const shipsConfigsReducer = (state = defaultState, action: ShipsConfigsAction) => {
-  if (action.type === 'RotateShips') {
-    return state.map((config) => {
-      if (!config.isPlaced) {
+  if (action.type === 'RotateShip' && action.payload) {
+    return state.map((config, index) => {
+      if (action.payload === index && !config.isPlaced) {
         config.isTurnedHorizontally = !config.isTurnedHorizontally;
         config.rotation =
           config.rotation === shipMaxRotation ? 0 : config.rotation + shipRotationStep;

@@ -1,6 +1,6 @@
 import { GameMode } from '../other/types';
 
-export type ShipsConfigsActionType = 'RotateShips' | 'PlaceShip' | 'RemoveShip';
+export type ShipsConfigsActionType = 'RotateShip' | 'PlaceShip' | 'RemoveShip';
 
 export type AppActionType = 'ChangeGameMode';
 

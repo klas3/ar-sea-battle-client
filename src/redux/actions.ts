@@ -1,8 +1,9 @@
 import { GameMode } from '../other/types';
 import { AppAction, PlanesAction, ShipsConfigsAction } from './types';
 
-export const rotateShips = (): ShipsConfigsAction => ({
-  type: 'RotateShips',
+export const rotateShip = (shipIndex: number): ShipsConfigsAction => ({
+  type: 'RotateShip',
+  payload: shipIndex,
 });
 
 export const placeShip = (

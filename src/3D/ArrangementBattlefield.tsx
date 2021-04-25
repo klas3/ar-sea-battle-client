@@ -16,7 +16,7 @@ import gameService from '../services/gameService';
 import getDefaultShipsConfigs from '../other/shipsConfigs';
 import { convertToRadians, getDraggableLimit, getSegmentMidpoint } from '../other/helpers';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import { placeShip, removeShip, setPlanes } from '../redux/actions';
+import { placeShip, removeShip, rotateShip, setPlanes } from '../redux/actions';
 import { DragControls } from 'three/examples/jsm/controls/DragControls';
 
 interface IProps {
@@ -121,7 +121,13 @@ const ArrangementBattlefield = (props: IProps) => {
       const { position } = getDefaultShipsConfigs(additionalX, additionalZ)[
         event.object.userData.index
       ];
+
       const [defaultX, defaultY, defaultZ] = position;
+      const { x: currentX, z: currentZ } = objectPosition;
+      if (defaultX === currentX && defaultZ === currentZ) {
+        dispatch(rotateShip(index));
+        return;
+      }
       objectPosition.set(defaultX, defaultY, defaultZ);
       gameService.emptyShipPositions(shipsConfigs[index].planesPositions);
       dispatch(removeShip(index));

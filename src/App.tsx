@@ -17,10 +17,12 @@ const App = () => {
 
   const gameModeSetter = gameMode === '3D' ? setARGameMode : set3DGameMode;
 
+  const gameModeButtonText = gameMode === '3D' ? 'AR' : '3D';
+
   return (
     <>
       <button className="game-mode-button" onClick={gameModeSetter}>
-        Не нажимать!
+        {gameModeButtonText}
       </button>
       {scene}
     </>
