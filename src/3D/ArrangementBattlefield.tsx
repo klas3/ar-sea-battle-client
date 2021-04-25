@@ -1,7 +1,6 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import { Object3D } from 'three';
 import LoadingBox from './LoadingBox';
 import ShipInitialization from './ShipInitialization';
 import {
@@ -17,7 +16,8 @@ import gameService from '../services/gameService';
 import getDefaultShipsConfigs from '../other/shipsConfigs';
 import { convertToRadians, getDraggableLimit, getSegmentMidpoint } from '../other/helpers';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import { setIsPlaced } from '../redux/actions';
+import { placeShip, removeShip, setPlanes } from '../redux/actions';
+import { DragControls } from 'three/examples/jsm/controls/DragControls';
 
 interface IProps {
   additionalX?: number;
@@ -28,24 +28,32 @@ const ArrangementBattlefield = (props: IProps) => {
   const { additionalX = 0, additionalZ = 0 } = props;
 
   const shipsConfigs = useAppSelector((state) => state.shipsConfigs);
+  const planes = useAppSelector((state) => state.planes);
   const dispatch = useAppDispatch();
 
-  const [planes, setPlanes] = useState<THREE.Mesh[]>([]);
+  const [isShipsInitialized, setIsShipsInitialized] = useState(false);
 
   const { scene, camera, gl: renderer } = useThree();
 
   const addGridInteraction = () => {
-    const planes = gridCreator.addPlanes(
+    const createdPlanes = gridCreator.addPlanes(
       arrangementPlaneMaterial,
       additionalX,
       planeDefaultHeight,
       additionalZ,
     );
-    planes.forEach((plane) => scene.add(plane));
-    setPlanes(planes);
+    createdPlanes.forEach((plane) => scene.add(plane));
     scene.add(gridCreator.createGrid(additionalX, planeDefaultHeight, additionalZ));
+    dispatch(setPlanes(createdPlanes));
+    return () => {
+      planes.forEach((plane) => scene.remove(plane));
+      gameService.ships.forEach((ship) => scene.remove(ship));
+      gameService.ships.length = 0;
+      console.log(gameService.ships);
+    };
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(addGridInteraction, [additionalX, additionalZ, scene]);
 
   const render = () => {
@@ -53,21 +61,15 @@ const ArrangementBattlefield = (props: IProps) => {
     renderer.render(scene, camera);
   };
 
-  const registerShipModel = (gltf: Object3D) => gameService.addShip(gltf);
-
   const getPlaneMaterial = (index: number) => planes[index].material as THREE.MeshBasicMaterial;
 
   const uncolorPlanes = () =>
     planes.forEach((plane) => ((plane.material as THREE.MeshBasicMaterial).visible = false));
 
-  const emptyShipPositions = (positions: number[]) =>
-    positions.forEach((planePosition: number) => {
-      gameService.positions[planePosition] = 0;
-    });
-
   const tryMarkCell = (event: THREE.Event) => {
     const position = event.object.position;
-    const { size, planePositions } = event.object.userData;
+    const { index } = event.object.userData;
+    const { size } = shipsConfigs[index];
     position.set(position.x, planeDefaultHeight, position.z);
     uncolorPlanes();
 
@@ -88,8 +90,7 @@ const ArrangementBattlefield = (props: IProps) => {
       }
     }
 
-    emptyShipPositions(planePositions);
-    planePositions.length = 0;
+    gameService.emptyShipPositions(shipsConfigs[index].planesPositions);
 
     if (intersections.length !== size) {
       return;
@@ -110,8 +111,10 @@ const ArrangementBattlefield = (props: IProps) => {
   };
 
   const handleDragEnd = (event: THREE.Event) => {
+    gameService.enableCamera();
+
     const objectPosition = event.object.position;
-    const { planePositions, index } = event.object.userData;
+    const { index } = event.object.userData;
     const markedPlanes = planes.filter((plane) => getPlaneMaterial(plane.userData.index).visible);
 
     if (!markedPlanes.length) {
@@ -120,9 +123,8 @@ const ArrangementBattlefield = (props: IProps) => {
       ];
       const [defaultX, defaultY, defaultZ] = position;
       objectPosition.set(defaultX, defaultY, defaultZ);
-      emptyShipPositions(planePositions);
-      planePositions.length = 0;
-      dispatch(setIsPlaced(index, false));
+      gameService.emptyShipPositions(shipsConfigs[index].planesPositions);
+      dispatch(removeShip(index));
       return;
     }
 
@@ -131,12 +133,15 @@ const ArrangementBattlefield = (props: IProps) => {
     const { x: lastX, z: lastZ } = markedPlanes[lastPlaneIndex].position;
     objectPosition.setX(getSegmentMidpoint(firstX, lastX));
     objectPosition.setZ(getSegmentMidpoint(firstZ, lastZ));
+    const newPlanePositions: number[] = [];
     markedPlanes.forEach((plane) => {
       const planeIndex = plane.userData.index;
       gameService.positions[planeIndex] = markedPlanes.length;
-      planePositions.push(planeIndex);
+      newPlanePositions.push(planeIndex);
     });
-    dispatch(setIsPlaced(index, true));
+    dispatch(
+      placeShip(index, [objectPosition.x, objectPosition.y, objectPosition.z], newPlanePositions),
+    );
     uncolorPlanes();
   };
 
@@ -159,11 +164,23 @@ const ArrangementBattlefield = (props: IProps) => {
         index={index}
         config={shipConfig}
         onDrag={tryMarkCell}
+        onDragStart={gameService.disableCamera}
         onDragEnd={handleDragEnd}
-        reference={registerShipModel}
+        reference={gameService.addShip}
         draggableLimit={draggableLimit}
       />
     ));
+  }
+
+  if (!isShipsInitialized && gameService.ships.length) {
+    gameService.ships.forEach((ship) => {
+      const controls = new DragControls([ship], camera, renderer.domElement);
+      controls.transformGroup = true;
+      controls.addEventListener('drag', tryMarkCell);
+      controls.addEventListener('dragstart', gameService.disableCamera);
+      controls.addEventListener('dragend', handleDragEnd);
+    });
+    setIsShipsInitialized(true);
   }
 
   return <Suspense fallback={<LoadingBox />}>{renderedShips}</Suspense>;

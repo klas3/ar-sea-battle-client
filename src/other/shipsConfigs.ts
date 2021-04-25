@@ -59,6 +59,7 @@ const getShipConfig = (shipSize: ShipSize, positionIndex: number): ShipConfig =>
   rotation: modelsRotations[shipSize],
   isTurnedHorizontally: true,
   isPlaced: false,
+  planesPositions: [],
 });
 
 const getDefaultShipsConfigs = (additionalX: number, additionalZ: number): ShipConfig[] => {

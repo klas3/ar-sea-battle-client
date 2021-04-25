@@ -1,10 +1,13 @@
 import { Object3D } from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { gridCellsCount } from '../other/constants';
 
 class GameService {
   private shipsModels: Object3D[] = [];
 
   private shipsPositions: number[] = [];
+
+  private cameraController: OrbitControls | null = null;
 
   private leftSideMinRowIndex = 1;
 
@@ -33,6 +36,27 @@ class GameService {
   }
 
   public addShip = (ship: Object3D) => this.shipsModels.push(ship);
+
+  public setCamera = (camera: OrbitControls) => {
+    this.cameraController = camera;
+  };
+
+  public enableCamera = () => {
+    if (this.cameraController) {
+      this.cameraController.enabled = true;
+    }
+  };
+
+  public disableCamera = () => {
+    if (this.cameraController) {
+      this.cameraController.enabled = false;
+    }
+  };
+
+  public emptyShipPositions = (positions: number[]) =>
+    positions.forEach((planePosition: number) => {
+      this.positions[planePosition] = 0;
+    });
 
   public isPositionAvailable = (position: number) => {
     if (this.shipsPositions[position]) {

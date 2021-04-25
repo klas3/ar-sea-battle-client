@@ -1,0 +1,14 @@
+button {
+  position: absolute;
+  margin: 20px;
+  z-index: 1;
+}
+
+.rotate-button {
+  top: 0;
+}
+
+.game-mode-button {
+  right: 0;
+  top: 0;
+}

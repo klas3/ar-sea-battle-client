@@ -1,9 +1,7 @@
 body,
 html,
 #root {
-  width: 100%;
-  height: 100%;
-  margin: 0;
+  margin: 0 !important;
 }
 
 body {
@@ -11,9 +9,7 @@ body {
   overflow: hidden;
 }
 
-button {
-  position: absolute;
-  margin: 20px;
-  top: 0;
-  z-index: 1;
+.root-size {
+  width: 100% !important;
+  height: 100% !important;
 }

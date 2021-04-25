@@ -11,6 +11,9 @@ export interface ShipConfig {
   rotation: number;
   isTurnedHorizontally: boolean;
   isPlaced: boolean;
+  planesPositions: number[];
 }
 
 export type ShipSize = 'small' | 'medium' | 'large' | 'largest';
+
+export type GameMode = '3D' | 'AR';

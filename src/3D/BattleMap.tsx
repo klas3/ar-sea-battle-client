@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { PerspectiveCamera, ShaderMaterial } from 'three';
@@ -54,18 +54,17 @@ const BattleMap = () => {
 
   updateSun();
 
-  const onWindowResize = () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  };
-
-  window.addEventListener('resize', onWindowResize);
-
   useFrame(() => {
     waterMaterial.uniforms.time.value += 1.0 / 130.0;
     renderer.render(scene, camera);
   });
+
+  useEffect(() => {
+    return () => {
+      scene.remove(water);
+      scene.remove(sky);
+    };
+  }, [scene, sky, water]);
 
   return null;
 };

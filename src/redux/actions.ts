@@ -1,10 +1,30 @@
-import { ShipsConfigsAction, ShipsConfigsTypes } from './types';
+import { GameMode } from '../other/types';
+import { AppAction, PlanesAction, ShipsConfigsAction } from './types';
 
 export const rotateShips = (): ShipsConfigsAction => ({
-  type: ShipsConfigsTypes.RotateShips,
+  type: 'RotateShips',
 });
 
-export const setIsPlaced = (shipIndex: number, isPlaced: boolean): ShipsConfigsAction => ({
-  type: ShipsConfigsTypes.SetIsPlaces,
-  payload: { shipIndex, isPlaced },
+export const placeShip = (
+  shipIndex: number,
+  position: number[],
+  planesPositions: number[],
+): ShipsConfigsAction => ({
+  type: 'PlaceShip',
+  payload: { shipIndex, position, planesPositions },
+});
+
+export const removeShip = (shipIndex: number): ShipsConfigsAction => ({
+  type: 'RemoveShip',
+  payload: { shipIndex },
+});
+
+export const setGameMode = (gameMode: GameMode): AppAction => ({
+  type: 'ChangeGameMode',
+  payload: gameMode,
+});
+
+export const setPlanes = (planes: THREE.Mesh[]): PlanesAction => ({
+  type: 'SetPlanes',
+  payload: planes,
 });

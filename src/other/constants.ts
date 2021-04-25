@@ -23,3 +23,5 @@ export const mouse = new THREE.Vector2();
 export const shipSizesAdditions = [0, 20, -20, 40];
 
 export const arrangementPlaneMaterial = { color: 'green', visible: false };
+
+export const arCoordsСoefficient = 100;
