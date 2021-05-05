@@ -1,13 +1,20 @@
 import { GameMode } from '../other/types';
 
-export type ShipsConfigsActionType = 'RotateShip' | 'PlaceShip' | 'RemoveShip';
+export type ShipsActionType =
+  | 'RotateShip'
+  | 'PlaceShip'
+  | 'RemoveShip'
+  | 'EmptyShipsModels'
+  | 'SetShipsModels'
+  | 'EmptyPositions'
+  | 'ArrangeRandomly'
+  | 'SetPlanes'
+  | 'SetAdditions';
 
 export type AppActionType = 'ChangeGameMode';
 
-export type PlanesActionType = 'SetPlanes';
-
-export interface ShipsConfigsAction {
-  type: ShipsConfigsActionType;
+export interface ShipsAction {
+  type: ShipsActionType;
   payload?: any;
 }
 
@@ -17,10 +24,5 @@ export interface AppState {
 
 export interface AppAction {
   type: AppActionType;
-  payload?: any;
-}
-
-export interface PlanesAction {
-  type: PlanesActionType;
   payload?: any;
 }

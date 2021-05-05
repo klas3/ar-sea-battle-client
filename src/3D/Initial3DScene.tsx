@@ -16,6 +16,7 @@ const Initial3DScene = () => {
     }
     rootElement.classList.add('root-size');
     document.body.classList.add('root-size');
+    document.body.removeAttribute('style');
     document.documentElement.classList.add('root-size');
     return () => {
       rootElement.classList.remove('root-size');

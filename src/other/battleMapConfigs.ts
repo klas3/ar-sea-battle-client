@@ -8,7 +8,7 @@ export const mapSize = 10000;
 
 export const sunParameters = {
   inclination: 0.5,
-  azimuth: 0.205,
+  azimuth: -0.05,
 };
 
 export const waterConfig = {

@@ -1,7 +1,7 @@
 import Initial3DScene from './3D/Initial3DScene';
 import FriendlyARBattlefield from './AR/FriendlyARBattlefield';
 import { useAppDispatch, useAppSelector } from './hooks/reduxHooks';
-import { setGameMode } from './redux/actions';
+import { arrangeRandomly, setGameMode } from './redux/actions';
 import './styles/buttons.css';
 
 const App = () => {
@@ -19,8 +19,13 @@ const App = () => {
 
   const gameModeButtonText = gameMode === '3D' ? 'AR' : '3D';
 
+  const randomlyArrangeShips = () => dispatch(arrangeRandomly());
+
   return (
     <>
+      <button className="random-arranging-button" onClick={randomlyArrangeShips}>
+        Arrange
+      </button>
       <button className="game-mode-button" onClick={gameModeSetter}>
         {gameModeButtonText}
       </button>

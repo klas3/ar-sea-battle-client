@@ -27,13 +27,15 @@ const BattleMap = () => {
     const skyUniforms = mapSky.material.uniforms;
 
     skyUniforms.turbidity.value = 10;
-    skyUniforms.rayleigh.value = 2;
+    skyUniforms.rayleigh.value = 3;
     skyUniforms.mieCoefficient.value = 0.005;
-    skyUniforms.mieDirectionalG.value = 0.8;
+    skyUniforms.mieDirectionalG.value = 0.7;
 
     scene.add(mapSky);
     return mapSky;
   }, [scene]);
+
+  renderer.toneMappingExposure = 1;
 
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
 
@@ -55,7 +57,7 @@ const BattleMap = () => {
   updateSun();
 
   useFrame(() => {
-    waterMaterial.uniforms.time.value += 1.0 / 130.0;
+    waterMaterial.uniforms.time.value += 1.0 / 100.0;
     renderer.render(scene, camera);
   });
 

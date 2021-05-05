@@ -1,12 +1,10 @@
 import { combineReducers } from 'redux';
 import appReducer from './appReducer';
-import planesReducer from './planesReducer';
-import shipsConfigsReducer from './shipsConfigsReducer';
+import shipsReducer from './shipsReducer';
 
 const rootReducer = combineReducers({
-  shipsConfigs: shipsConfigsReducer,
+  ships: shipsReducer,
   app: appReducer,
-  planes: planesReducer,
 });
 
 export default rootReducer;

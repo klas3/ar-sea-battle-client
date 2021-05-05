@@ -10,16 +10,16 @@ const modelsPathes = {
 };
 
 const modelsScales = {
-  small: [0.004, 0.004, 0.004],
-  medium: [1.5, 1.5, 1.5],
-  large: [3.3, 3.3, 2.9],
-  largest: [2.3, 2.2, 2.2],
+  small: [1, 1, 1],
+  medium: [2.5, 2.5, 2.5],
+  large: [1.2, 1.4, 1.2],
+  largest: [4, 4.5, 4.5],
 };
 
 const modelsRotations = {
   small: 0,
   medium: 180,
-  large: 90,
+  large: 0,
   largest: 180,
 };
 
@@ -39,7 +39,7 @@ const modelsPositions = {
     [-140, 1, -90],
     [-140, 1, -10],
   ],
-  largest: [[140, 3, 70]],
+  largest: [[140, 1, 70]],
 };
 
 const modelsSizes = {
@@ -62,14 +62,14 @@ const getShipConfig = (shipSize: ShipSize, positionIndex: number): ShipConfig =>
   planesPositions: [],
 });
 
-const getDefaultShipsConfigs = (additionalX: number, additionalZ: number): ShipConfig[] => {
+const getDefaultShipsConfigs = (additionalX: number = 0, additionalZ: number = 0): ShipConfig[] => {
   const configs = [];
   for (let shipSize = 0; shipSize < maxShipSize; shipSize += 1) {
     for (let shipIndex = 0; shipIndex < maxShipSize - shipSize; shipIndex += 1) {
-      const defaultConfgig = getShipConfig(shipsSizesNames[shipSize], shipIndex);
-      defaultConfgig.position[0] += additionalX;
-      defaultConfgig.position[2] += additionalZ;
-      configs.push(defaultConfgig);
+      const defaultConfig = getShipConfig(shipsSizesNames[shipSize], shipIndex);
+      defaultConfig.position[0] += additionalX;
+      defaultConfig.position[2] += additionalZ;
+      configs.push(defaultConfig);
     }
   }
   return configs;

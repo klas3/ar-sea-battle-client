@@ -1,9 +1,8 @@
 import { connect } from 'react-redux';
 import React from 'react';
-import { arCoordsСoefficient } from '../other/constants';
 // @ts-ignore
 import { AFrameRenderer, Marker } from 'react-web-ar';
-import gameService from '../services/gameService';
+import { arCoordsСoefficient } from '../other/constants';
 import { ShipConfig } from '../other/types';
 import { RootState } from '../redux/store';
 
@@ -25,20 +24,20 @@ class FriendlyARBattlefield extends React.Component<IProps> {
 
   getRenderedShips() {
     const { shipsConfigs } = this.props;
-    const renderedShips = gameService.ships.map((ship) => {
-      const shipConfig = shipsConfigs[ship.userData.index];
-      const { x, z } = ship.position;
-      const position = `${x / arCoordsСoefficient} ${0} ${z / arCoordsСoefficient}`;
-      const [scaleX, scaleY, scaleZ] = shipConfig.scale;
+    const renderedShips = shipsConfigs.map((config, index) => {
+      const position = `${config.position[0] / arCoordsСoefficient} ${0} ${
+        config.position[2] / arCoordsСoefficient
+      }`;
+      const [scaleX, scaleY, scaleZ] = config.scale;
       const scale = `${scaleX / arCoordsСoefficient} ${scaleY / arCoordsСoefficient} ${
         scaleZ / arCoordsСoefficient
       }`;
-      const rotation = `0 ${shipConfig.rotation} 0`;
+      const rotation = `0 ${config.rotation} 0`;
       return (
         // @ts-ignore
         <a-entity
-          key={ship.userData.index}
-          gltf-model={shipConfig.path}
+          key={index}
+          gltf-model={config.path}
           position={position}
           scale={scale}
           rotation={rotation}
@@ -71,7 +70,6 @@ class FriendlyARBattlefield extends React.Component<IProps> {
 
   render() {
     const renderedShips = this.getRenderedShips();
-    const renderedPlanes = this.getRenderedPlanes();
     return (
       <AFrameRenderer
         arToolKit={{ debugUIEnabled: false, sourceType: 'webcam' }}
@@ -84,7 +82,6 @@ class FriendlyARBattlefield extends React.Component<IProps> {
             scale="0.013 0.013 0.013"
             position="0.2 -0.1 -0.2"
           />
-          {renderedPlanes}
           {renderedShips}
         </Marker>
       </AFrameRenderer>
@@ -93,8 +90,8 @@ class FriendlyARBattlefield extends React.Component<IProps> {
 }
 
 const mapStateToProps = (state: RootState) => ({
-  shipsConfigs: state.shipsConfigs,
-  planes: state.planes,
+  shipsConfigs: state.ships.configs,
+  planes: state.ships.planes,
 });
 
 export default connect(mapStateToProps)(FriendlyARBattlefield);

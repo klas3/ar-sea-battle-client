@@ -3,7 +3,7 @@ button {
   margin: 20px;
   z-index: 1;
   font-size: 20px;
-  background-color: #0077be;
+  background-color: #4d5f87;
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 5px;
@@ -15,5 +15,9 @@ button {
 
 .game-mode-button {
   right: 0;
+  top: 0;
+}
+
+.random-arranging-button {
   top: 0;
 }

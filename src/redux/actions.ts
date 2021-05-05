@@ -1,21 +1,22 @@
+import { Object3D } from 'three';
 import { GameMode } from '../other/types';
-import { AppAction, PlanesAction, ShipsConfigsAction } from './types';
+import { AppAction, ShipsAction } from './types';
 
-export const rotateShip = (shipIndex: number): ShipsConfigsAction => ({
+export const rotateShip = (shipIndex: number): ShipsAction => ({
   type: 'RotateShip',
-  payload: shipIndex,
+  payload: { shipIndex },
 });
 
 export const placeShip = (
   shipIndex: number,
   position: number[],
   planesPositions: number[],
-): ShipsConfigsAction => ({
+): ShipsAction => ({
   type: 'PlaceShip',
   payload: { shipIndex, position, planesPositions },
 });
 
-export const removeShip = (shipIndex: number): ShipsConfigsAction => ({
+export const removeShip = (shipIndex: number): ShipsAction => ({
   type: 'RemoveShip',
   payload: { shipIndex },
 });
@@ -25,7 +26,30 @@ export const setGameMode = (gameMode: GameMode): AppAction => ({
   payload: gameMode,
 });
 
-export const setPlanes = (planes: THREE.Mesh[]): PlanesAction => ({
+export const setPlanes = (planes: THREE.Mesh[]): ShipsAction => ({
   type: 'SetPlanes',
   payload: planes,
+});
+
+export const emptyShipsModels = (): ShipsAction => ({
+  type: 'EmptyShipsModels',
+});
+
+export const setShipsModels = (models3D: Object3D[]): ShipsAction => ({
+  type: 'SetShipsModels',
+  payload: models3D,
+});
+
+export const emptyPositions = (positions: number[]): ShipsAction => ({
+  type: 'EmptyPositions',
+  payload: positions,
+});
+
+export const arrangeRandomly = (): ShipsAction => ({
+  type: 'ArrangeRandomly',
+});
+
+export const setAdditions = (additionalX: number, additionalZ: number): ShipsAction => ({
+  type: 'SetAdditions',
+  payload: { additionalX, additionalZ },
 });

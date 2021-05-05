@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export const gridCellsCount = 10;
+export const battlefieldSize = 10;
 
 export const shipRotationStep = 90;
 
@@ -25,3 +25,13 @@ export const shipSizesAdditions = [0, 20, -20, 40];
 export const arrangementPlaneMaterial = { color: 'green', visible: false };
 
 export const arCoordsСoefficient = 100;
+
+export const lastBattlefieldRowIndex = 90;
+
+export const emptyZoneMark = -1;
+
+export const restrictedZoneMark = -2;
+
+export const shipsMaxRotationsCount = 4;
+
+export const shipsRotationStep = 90;
