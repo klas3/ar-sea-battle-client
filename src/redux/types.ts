@@ -26,3 +26,15 @@ export interface AppAction {
   type: AppActionType;
   payload?: any;
 }
+
+export type AudioActionType = 'SetAudio' | 'EnableAudio';
+
+export interface AudioState {
+  path: string;
+  maxDistance: number;
+}
+
+export interface AudioAction {
+  type: AudioActionType;
+  payload?: any;
+}

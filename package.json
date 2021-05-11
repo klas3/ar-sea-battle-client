@@ -15,7 +15,6 @@
     "react-redux": "^7.2.3",
     "react-scripts": "4.0.2",
     "react-three-fiber": "^5.3.18",
-    "react-web-ar": "^1.0.0-beta2",
     "redux": "^4.0.5",
     "three": "^0.125.2",
     "typescript": "^4.1.2",
@@ -46,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "@types/aframe": "^1.0.3",
     "@types/react-redux": "^7.1.16",
     "@types/redux": "^3.6.0"
   }

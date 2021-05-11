@@ -1,6 +1,9 @@
 import * as THREE from 'three';
+import { textureLoader } from './constants';
 
 const waterTextureFilePath = 'textures/waternormals.jpg';
+
+const cloudTextureFilePath = 'textures/cloud.png';
 
 export const sun = new THREE.Vector3();
 
@@ -14,7 +17,7 @@ export const sunParameters = {
 export const waterConfig = {
   textureWidth: 512,
   textureHeight: 512,
-  waterNormals: new THREE.TextureLoader().load(waterTextureFilePath, (texture) => {
+  waterNormals: textureLoader.load(waterTextureFilePath, (texture) => {
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   }),
   alpha: 1.0,
@@ -23,3 +26,8 @@ export const waterConfig = {
   waterColor: 0x1c2842,
   distortionScale: 3.7,
 };
+
+export const cloudMaterial = new THREE.MeshLambertMaterial({
+  map: textureLoader.load(cloudTextureFilePath),
+  transparent: true,
+});

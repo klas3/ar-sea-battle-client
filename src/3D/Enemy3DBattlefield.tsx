@@ -9,7 +9,7 @@ interface IProps {
   additionalZ?: number;
 }
 
-const EnemyBattlefield = (props: IProps) => {
+const Enemy3DBattlefield = (props: IProps) => {
   const [planes, setPlanes] = useState<THREE.Mesh[]>([]);
   const { scene, camera, gl: renderer } = useThree();
 
@@ -64,4 +64,4 @@ const EnemyBattlefield = (props: IProps) => {
   return null;
 };
 
-export default EnemyBattlefield;
+export default Enemy3DBattlefield;

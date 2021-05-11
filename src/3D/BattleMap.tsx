@@ -4,12 +4,14 @@ import * as THREE from 'three';
 import { PerspectiveCamera, ShaderMaterial } from 'three';
 import { Sky } from 'three/examples/jsm/objects/Sky.js';
 import { Water } from 'three/examples/jsm/objects/Water.js';
-import { mapSize, sun, sunParameters, waterConfig } from '../other/battleMapConfigs';
+import { useAppDispatch } from '../hooks/reduxHooks';
+import { cloudMaterial, mapSize, sun, sunParameters, waterConfig } from '../other/battleMapConfigs';
 
 const BattleMap = () => {
   const { scene, camera: threeCamera, gl: renderer } = useThree();
-
   const camera = threeCamera as PerspectiveCamera;
+
+  const dispatch = useAppDispatch();
 
   const water = useMemo(() => {
     const waterGeometry = new THREE.PlaneGeometry(mapSize, mapSize);
@@ -36,6 +38,7 @@ const BattleMap = () => {
   }, [scene]);
 
   renderer.toneMappingExposure = 1;
+  renderer.setClearColor(0x000000, 1);
 
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
 
@@ -62,11 +65,20 @@ const BattleMap = () => {
   });
 
   useEffect(() => {
+    const cloudGeo = new THREE.PlaneBufferGeometry(2000, 2000);
+    let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
+    cloud.position.set(0, 200, 0);
+    cloud.rotation.x = 1.555;
+    cloud.rotation.z = Math.random() * 360;
+    // @ts-ignore
+    cloud.material.opacity = 0.13;
+    scene.add(cloud);
+
     return () => {
       scene.remove(water);
       scene.remove(sky);
     };
-  }, [scene, sky, water]);
+  }, [scene, sky, water, camera, dispatch]);
 
   return null;
 };

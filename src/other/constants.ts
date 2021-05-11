@@ -35,3 +35,5 @@ export const restrictedZoneMark = -2;
 export const shipsMaxRotationsCount = 4;
 
 export const shipsRotationStep = 90;
+
+export const textureLoader = new THREE.TextureLoader();

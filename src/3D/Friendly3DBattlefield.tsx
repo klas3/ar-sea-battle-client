@@ -34,13 +34,12 @@ interface IProps {
   additionalZ?: number;
 }
 
-const ArrangementBattlefield = (props: IProps) => {
+const Friendly3DBattlefield = (props: IProps) => {
   const { additionalX = 0, additionalZ = 0 } = props;
 
-  const shipsConfigs = useAppSelector((state) => state.ships.configs);
-  const models3D = useAppSelector((state) => state.ships.models3D);
-  const planes = useAppSelector((state) => state.ships.planes);
-  const positions = useAppSelector((state) => state.ships.positions);
+  const { configs: shipsConfigs, models3D, planes, positions } = useAppSelector(
+    (state) => state.ships,
+  );
   const dispatch = useAppDispatch();
 
   const [isShipsInitialized, setIsShipsInitialized] = useState(false);
@@ -194,4 +193,4 @@ const ArrangementBattlefield = (props: IProps) => {
   return <Suspense fallback={<LoadingBox />}>{renderedShips}</Suspense>;
 };
 
-export default ArrangementBattlefield;
+export default Friendly3DBattlefield;

@@ -4,12 +4,12 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 interface IProps {
   enabled?: boolean;
-  referense?: (controls: OrbitControls) => void;
+  reference?: (controls: OrbitControls) => void;
 }
 
 const CameraController = (props: IProps) => {
   const { camera, gl } = useThree();
-  const { enabled = true, referense } = props;
+  const { enabled = true, reference } = props;
 
   const controls = useMemo(() => {
     const cameraControls = new OrbitControls(camera, gl.domElement);
@@ -21,17 +21,17 @@ const CameraController = (props: IProps) => {
     cameraControls.enabled = enabled;
     cameraControls.enablePan = false;
 
+    if (reference) {
+      reference(cameraControls);
+    }
+
     return cameraControls;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [camera, enabled, gl.domElement, window.innerWidth, window.innerHeight]);
 
   useEffect(() => {
     return () => controls.dispose();
-  });
-
-  if (referense) {
-    referense(controls);
-  }
+  }, [controls]);
 
   return null;
 };

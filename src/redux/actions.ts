@@ -1,6 +1,6 @@
 import { Object3D } from 'three';
 import { GameMode } from '../other/types';
-import { AppAction, ShipsAction } from './types';
+import { AppAction, AudioAction, ShipsAction } from './types';
 
 export const rotateShip = (shipIndex: number): ShipsAction => ({
   type: 'RotateShip',
@@ -52,4 +52,13 @@ export const arrangeRandomly = (): ShipsAction => ({
 export const setAdditions = (additionalX: number, additionalZ: number): ShipsAction => ({
   type: 'SetAdditions',
   payload: { additionalX, additionalZ },
+});
+
+export const setAudio = (path: string, maxDistance: number): AudioAction => ({
+  type: 'SetAudio',
+  payload: { path, maxDistance },
+});
+
+export const enableAudio = (): AudioAction => ({
+  type: 'EnableAudio',
 });
