@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { useThree } from 'react-three-fiber';
 import { AudioListener, PositionalAudio } from 'three';
 import { useAppSelector } from '../hooks/reduxHooks';
-import { audioLoader } from '../other/constants';
+import { audioLoader } from '../other/tools';
 
 const Sound = () => {
   const { camera } = useThree();

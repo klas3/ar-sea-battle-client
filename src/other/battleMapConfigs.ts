@@ -1,5 +1,5 @@
 import { MeshLambertMaterial, RepeatWrapping, Vector3 } from 'three';
-import { textureLoader } from './constants';
+import { textureLoader } from './tools';
 
 const waterTextureFilePath = 'textures/waternormals.jpg';
 

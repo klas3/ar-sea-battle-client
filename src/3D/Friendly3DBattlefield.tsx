@@ -5,9 +5,7 @@ import { Event as ThreeEvent, MeshBasicMaterial, Object3D } from 'three';
 import LoadingBox from './LoadingBox';
 import ShipInitialization from './ShipInitialization';
 import {
-  diractionalRay,
   planeDefaultHeight,
-  raycaster,
   shipSizesAdditions,
   arrangementPlaneMaterial,
   shipDraggingAddition,
@@ -27,6 +25,7 @@ import getDefaultShipsConfigs from '../other/shipsConfigs';
 import { convertToRadians, getDraggableLimit, getSegmentMidpoint } from '../other/helpers';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { isPositionAvailable } from '../other/shipsArranging';
+import { diractionalRay, raycaster } from '../other/tools';
 
 interface IProps {
   additionalX?: number;

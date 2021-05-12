@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
 import { Mesh, MeshBasicMaterial } from 'three';
-import { planeDefaultHeight, battlePlaneMaterial, raycaster, mouse } from '../other/constants';
+import { planeDefaultHeight, battlePlaneMaterial } from '../other/constants';
 import gridCreator from '../other/gridHelper';
+import { mouse, raycaster } from '../other/tools';
 
 interface IProps {
   additionalX?: number;
