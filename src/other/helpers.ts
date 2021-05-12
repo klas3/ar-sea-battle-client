@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Vector3 } from 'three';
 import { battlefieldSize, lastBattlefieldRowIndex } from './constants';
 import { RandomArrangingPosition } from './types';
 
@@ -8,8 +8,8 @@ export const getSegmentMidpoint = (startPoint: number, endPoint: number) =>
   (startPoint + endPoint) / 2;
 
 export const getDraggableLimit = (additionalX: number, additionalZ: number) => ({
-  min: new THREE.Vector3(-160 + additionalX, 0, -100 + additionalZ),
-  max: new THREE.Vector3(160 + additionalX, 4, 100 + additionalZ),
+  min: new Vector3(-160 + additionalX, 0, -100 + additionalZ),
+  max: new Vector3(160 + additionalX, 4, 100 + additionalZ),
 });
 
 export const getDefaultPositions = (): number[] => new Array(battlefieldSize ** 2).fill(-1);

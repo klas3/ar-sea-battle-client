@@ -8,6 +8,7 @@ import '../styles/3D.css';
 import store from '../redux/store';
 import gameService from '../services/gameService';
 import Sound from './Sound';
+import { defaultCameraConfig } from '../other/constants';
 
 const Initial3DScene = () => {
   const [isSoundEnabled, setIsSoundEnabled] = useState(false);
@@ -30,14 +31,14 @@ const Initial3DScene = () => {
       document.body.classList.remove('root-size');
       document.documentElement.classList.remove('root-size');
     };
-  });
+  }, []);
 
   return (
     <>
       <button className="sound-button" onClick={togleSound}>
         Sound
       </button>
-      <Canvas camera={{ position: [0, 175, 5] }}>
+      <Canvas camera={defaultCameraConfig}>
         <Provider store={store}>
           {isSoundEnabled && <Sound />}
           <CameraController reference={gameService.setCamera} />

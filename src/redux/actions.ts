@@ -62,3 +62,7 @@ export const setAudio = (path: string, maxDistance: number): AudioAction => ({
 export const enableAudio = (): AudioAction => ({
   type: 'EnableAudio',
 });
+
+export const togleBattlefield = (): AppAction => ({
+  type: 'TogleBattlefield',
+});

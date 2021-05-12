@@ -5,7 +5,7 @@ import { arrangeRandomly, setGameMode } from './redux/actions';
 import './styles/buttons.css';
 
 const App = () => {
-  const gameMode = useAppSelector((state) => state.app.mode);
+  const gameMode = useAppSelector((state) => state.game.mode);
 
   const dispatch = useAppDispatch();
 

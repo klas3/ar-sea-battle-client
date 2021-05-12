@@ -11,7 +11,7 @@ export type ShipsActionType =
   | 'SetPlanes'
   | 'SetAdditions';
 
-export type AppActionType = 'ChangeGameMode';
+export type AppActionType = 'ChangeGameMode' | 'TogleBattlefield';
 
 export interface ShipsAction {
   type: ShipsActionType;
@@ -20,6 +20,7 @@ export interface ShipsAction {
 
 export interface AppState {
   mode: GameMode;
+  battlefield: 'friendly' | 'enemy';
 }
 
 export interface AppAction {

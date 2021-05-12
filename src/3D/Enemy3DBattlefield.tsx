@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
-import * as THREE from 'three';
+import { Mesh, MeshBasicMaterial } from 'three';
 import { planeDefaultHeight, battlePlaneMaterial, raycaster, mouse } from '../other/constants';
 import gridCreator from '../other/gridHelper';
 
@@ -10,7 +10,7 @@ interface IProps {
 }
 
 const Enemy3DBattlefield = (props: IProps) => {
-  const [planes, setPlanes] = useState<THREE.Mesh[]>([]);
+  const [planes, setPlanes] = useState<Mesh[]>([]);
   const { scene, camera, gl: renderer } = useThree();
 
   const { additionalX = 0, additionalZ = 0 } = props;
@@ -38,8 +38,7 @@ const Enemy3DBattlefield = (props: IProps) => {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(planes);
     if (intersects.length > 0) {
-      const material = planes[intersects[0].object.userData.index]
-        .material as THREE.MeshBasicMaterial;
+      const material = planes[intersects[0].object.userData.index].material as MeshBasicMaterial;
       material.visible = true;
     }
   };

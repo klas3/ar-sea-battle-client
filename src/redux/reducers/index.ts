@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
-import appReducer from './appReducer';
+import gameReducer from './gameReducer';
 import audioReducer from './audioReducer';
 import shipsReducer from './shipsReducer';
 
 const rootReducer = combineReducers({
   ships: shipsReducer,
-  app: appReducer,
+  game: gameReducer,
   audio: audioReducer,
 });
 

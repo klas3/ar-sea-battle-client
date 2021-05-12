@@ -25,3 +25,9 @@ button {
 .sound-button {
   bottom: 0;
 }
+
+.change-battlefield-button {
+  right: 0;
+  top: 0;
+  margin-right: 90px;
+}

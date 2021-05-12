@@ -33,10 +33,7 @@ const EnemyARBattlefield = () => {
     });
   }
 
-  return (
-    // @ts-ignore
-    <a-marker preset="hiro"> {renderedPlanes}</a-marker>
-  );
+  return <>{renderedPlanes}</>;
 };
 
 export default EnemyARBattlefield;

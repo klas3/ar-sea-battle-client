@@ -1,7 +1,13 @@
 import { useEffect, useMemo } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
-import * as THREE from 'three';
-import { PerspectiveCamera, ShaderMaterial } from 'three';
+import {
+  Mesh,
+  PerspectiveCamera,
+  PlaneBufferGeometry,
+  PlaneGeometry,
+  PMREMGenerator,
+  ShaderMaterial,
+} from 'three';
 import { Sky } from 'three/examples/jsm/objects/Sky.js';
 import { Water } from 'three/examples/jsm/objects/Water.js';
 import { useAppDispatch } from '../hooks/reduxHooks';
@@ -14,7 +20,7 @@ const BattleMap = () => {
   const dispatch = useAppDispatch();
 
   const water = useMemo(() => {
-    const waterGeometry = new THREE.PlaneGeometry(mapSize, mapSize);
+    const waterGeometry = new PlaneGeometry(mapSize, mapSize);
     const mapWater = new Water(waterGeometry, waterConfig);
     mapWater.rotation.x = -Math.PI / 2;
     scene.add(mapWater);
@@ -40,7 +46,7 @@ const BattleMap = () => {
   renderer.toneMappingExposure = 1;
   renderer.setClearColor(0x000000, 1);
 
-  const pmremGenerator = new THREE.PMREMGenerator(renderer);
+  const pmremGenerator = new PMREMGenerator(renderer);
 
   const updateSun = () => {
     const theta = Math.PI * (sunParameters.inclination - 0.5);
@@ -65,8 +71,8 @@ const BattleMap = () => {
   });
 
   useEffect(() => {
-    const cloudGeo = new THREE.PlaneBufferGeometry(2000, 2000);
-    let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
+    const cloudGeo = new PlaneBufferGeometry(2000, 2000);
+    let cloud = new Mesh(cloudGeo, cloudMaterial);
     cloud.position.set(0, 200, 0);
     cloud.rotation.x = 1.555;
     cloud.rotation.z = Math.random() * 360;

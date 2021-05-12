@@ -12,7 +12,7 @@ const modelsPathes = {
 const modelsScales = {
   small: [1, 1, 1],
   medium: [2.5, 2.5, 2.5],
-  large: [1.2, 1.4, 1.2],
+  large: [4, 4, 4],
   largest: [4, 4.5, 4.5],
 };
 

@@ -1,8 +1,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
 import { DragControls } from 'three/examples/jsm/controls/DragControls';
-import { Object3D } from 'three';
-import * as THREE from 'three';
+import { Event as ThreeEvent, MeshBasicMaterial, Object3D } from 'three';
 import LoadingBox from './LoadingBox';
 import ShipInitialization from './ShipInitialization';
 import {
@@ -37,9 +36,12 @@ interface IProps {
 const Friendly3DBattlefield = (props: IProps) => {
   const { additionalX = 0, additionalZ = 0 } = props;
 
-  const { configs: shipsConfigs, models3D, planes, positions } = useAppSelector(
-    (state) => state.ships,
-  );
+  const {
+    configs: shipsConfigs,
+    models3D,
+    planes,
+    positions,
+  } = useAppSelector((state) => state.ships);
   const dispatch = useAppDispatch();
 
   const [isShipsInitialized, setIsShipsInitialized] = useState(false);
@@ -75,12 +77,12 @@ const Friendly3DBattlefield = (props: IProps) => {
 
   const disableCamera = () => gameService.setCameraEnabled(false);
 
-  const getPlaneMaterial = (index: number) => planes[index].material as THREE.MeshBasicMaterial;
+  const getPlaneMaterial = (index: number) => planes[index].material as MeshBasicMaterial;
 
   const uncolorPlanes = () =>
-    planes.forEach((plane) => ((plane.material as THREE.MeshBasicMaterial).visible = false));
+    planes.forEach((plane) => ((plane.material as MeshBasicMaterial).visible = false));
 
-  const tryMarkPlanes = (event: THREE.Event) => {
+  const tryMarkPlanes = (event: ThreeEvent) => {
     const position = event.object.position;
     const { index } = event.object.userData;
     const { size } = shipsConfigs[index];
@@ -120,7 +122,7 @@ const Friendly3DBattlefield = (props: IProps) => {
     });
   };
 
-  const handleDragEnd = (event: THREE.Event) => {
+  const handleDragEnd = (event: ThreeEvent) => {
     gameService.setCameraEnabled(true);
 
     const objectPosition = event.object.position;

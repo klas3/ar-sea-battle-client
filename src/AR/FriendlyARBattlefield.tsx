@@ -26,24 +26,11 @@ const FriendlyARBattlefield = () => {
   });
 
   return (
-    // @ts-ignore
-    <a-marker preset="hiro">
+    <>
       {/* @ts-ignore */}
       <a-entity gltf-model="models/sea.glb" scale="0.013 0.013 0.013" position="0.2 -0.1 -0.2" />
-      {/* @ts-ignore */}
-      {/* <a-entity gltf-model="models/cloud1.glb" scale="0.002 0.002 0.002" position="0 0 0" /> */}
-      {/* @ts-ignore */}
-      <a-entity
-        gltf-model="models/cloud.glb"
-        scale="3.5 3.5 3.5"
-        rotation="0 0 100"
-        position="1.8 1 0"
-      />
-      {/* @ts-ignore */}
-      {/* <a-entity gltf-model="models/cloud3.glb" scale="1 1 1" position="0 1 -0.5" /> */}
       {renderedShips}
-      {/* @ts-ignore */}
-    </a-marker>
+    </>
   );
 };
 
