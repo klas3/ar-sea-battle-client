@@ -9,4 +9,4 @@ const app = (
   </ReduxProvider>
 );
 
-ReactDOM.render(app, document.getElementById('root'));
+ReactDOM.render(app, document.body);

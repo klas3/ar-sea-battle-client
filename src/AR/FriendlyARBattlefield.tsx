@@ -2,7 +2,7 @@ import { arCoordsСoefficient } from '../other/constants';
 import { useAppSelector } from '../hooks/reduxHooks';
 
 const FriendlyARBattlefield = () => {
-  const { configs: shipsConfigs } = useAppSelector((state) => state.ships);
+  const shipsConfigs = useAppSelector((state) => state.ships.configs);
 
   const renderedShips = shipsConfigs.map((config, index) => {
     const position = `${config.position[0] / arCoordsСoefficient} ${0} ${

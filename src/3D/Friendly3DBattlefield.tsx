@@ -48,7 +48,7 @@ const Friendly3DBattlefield = (props: IProps) => {
   const { scene, camera, gl: renderer } = useThree();
 
   const addGridInteraction = () => {
-    const createdPlanes = gridCreator.addPlanes(
+    const createdPlanes = gridCreator.createPlanes(
       arrangementPlaneMaterial,
       additionalX,
       planeDefaultHeight,

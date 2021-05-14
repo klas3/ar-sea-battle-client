@@ -10,11 +10,11 @@ class GridCreator {
     return gridHelper;
   };
 
-  public addPlanes = (
+  public createPlanes = (
     material: THREE.MeshBasicMaterialParameters,
-    additionalX: number,
-    additionalY: number,
-    additionalZ: number,
+    additionalX: number = 0,
+    additionalY: number = 0,
+    additionalZ: number = 0,
   ) => {
     const geometrySize = gridSize / battlefieldSize;
     const geometry = new PlaneGeometry(geometrySize, geometrySize);

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import EnemyARBattlefield from './EnemyARBattlefield';
 import { togleBattlefield } from '../redux/actions';
@@ -9,6 +9,8 @@ const InitialARScene = () => {
 
   const dispatch = useAppDispatch();
 
+  const scene = useRef<Element | null>();
+
   const changeBattlefieldText = battlefieldType === 'friendly' ? 'Enemy' : 'You';
 
   const battlefield =
@@ -16,13 +18,12 @@ const InitialARScene = () => {
 
   const onBattlefieldButtonClick = () => dispatch(togleBattlefield());
 
-  // eslint-disable-next-line
   useEffect(() => {
+    scene.current = document.getElementsByTagName('a-scene').item(0);
     return () => {
-      const scene = document.getElementsByTagName('a-scene').item(0);
-      if (scene) {
+      if (scene.current) {
         // @ts-ignore
-        scene.renderer.dispose();
+        scene.current.renderer.dispose();
       }
       const videos = document.querySelectorAll('[id=arjs-video]');
       if (videos.length) {
@@ -38,7 +39,7 @@ const InitialARScene = () => {
       </button>
       {/* @ts-ignore */}
       <a-scene
-        cursor="rayOrigin: mouse;"
+        embedded
         vr-mode-ui="enabled: false"
         arjs="sourceType: webcam; debugUIEnabled: false;"
       >
@@ -48,7 +49,7 @@ const InitialARScene = () => {
           {/* @ts-ignore */}
         </a-marker>
         {/* @ts-ignore */}
-        <a-entity camera="userHeight: 1.6"></a-entity>
+        <a-entity camera="userHeight: 0;"></a-entity>
         {/* @ts-ignore */}
       </a-scene>
     </>

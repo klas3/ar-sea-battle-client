@@ -1,4 +1,4 @@
-import { Object3D } from 'three';
+import { Object3D, Mesh } from 'three';
 import { GameMode } from '../other/types';
 import { AppAction, AudioAction, ShipsAction } from './types';
 
@@ -26,7 +26,7 @@ export const setGameMode = (gameMode: GameMode): AppAction => ({
   payload: gameMode,
 });
 
-export const setPlanes = (planes: THREE.Mesh[]): ShipsAction => ({
+export const setPlanes = (planes: Mesh[]): ShipsAction => ({
   type: 'SetPlanes',
   payload: planes,
 });

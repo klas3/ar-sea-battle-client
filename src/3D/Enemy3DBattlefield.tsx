@@ -17,7 +17,7 @@ const Enemy3DBattlefield = (props: IProps) => {
   const { additionalX = 0, additionalZ = 0 } = props;
 
   const addGridInteraction = () => {
-    const planes = gridCreator.addPlanes(
+    const planes = gridCreator.createPlanes(
       battlePlaneMaterial,
       additionalX,
       planeDefaultHeight,

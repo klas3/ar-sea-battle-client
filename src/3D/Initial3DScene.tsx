@@ -16,22 +16,14 @@ const Initial3DScene = () => {
   const togleSound = () => setIsSoundEnabled(!isSoundEnabled);
 
   useEffect(() => {
-    const rootElement = document.getElementById('root');
-    if (!rootElement) {
-      return;
-    }
-
-    rootElement.classList.add('root-size');
     document.body.classList.add('root-size');
-    document.body.removeAttribute('style');
     document.documentElement.classList.add('root-size');
 
     return () => {
-      rootElement.classList.remove('root-size');
       document.body.classList.remove('root-size');
       document.documentElement.classList.remove('root-size');
     };
-  }, []);
+  });
 
   return (
     <>

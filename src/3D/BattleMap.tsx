@@ -79,12 +79,13 @@ const BattleMap = () => {
     // @ts-ignore
     cloud.material.opacity = 0.13;
     scene.add(cloud);
+    renderer.setPixelRatio(window.devicePixelRatio);
 
     return () => {
       scene.remove(water);
       scene.remove(sky);
     };
-  }, [scene, sky, water, camera, dispatch]);
+  }, [scene, sky, water, camera, dispatch, renderer]);
 
   return null;
 };
