@@ -1,0 +1,115 @@
+input,
+button {
+  position: absolute;
+  margin: 1em;
+  z-index: 1;
+  background-color: #4d5f87;
+  font-size: 1.2vw;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 0.4em;
+  padding-bottom: 0.4em;
+  border-radius: 0.3em;
+  border: 0.08em solid #444;
+  color: white;
+  text-align: center;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.255);
+}
+
+.top-right-button {
+  right: 0;
+  top: 0;
+}
+
+.top-left-button {
+  top: 0;
+}
+
+.sound-button {
+  bottom: 0;
+}
+
+.change-battlefield-button {
+  right: 0;
+  top: 0;
+  margin-right: 90px;
+}
+
+.first-menu-item {
+  top: 50%;
+  left: 50%;
+  width: 15em;
+  font-size: 1.7vw;
+  transform: translate(-50%, -50%);
+}
+
+.second-menu-item {
+  top: 60%;
+  left: 50%;
+  width: 15em;
+  font-size: 1.7vw;
+  transform: translate(-50%, -50%);
+}
+
+.title {
+  font-family: EvilEmpire;
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  top: 25%;
+  font-size: 7vw;
+  transform: translate(-50%, -50%);
+  color: #3b555cb6;
+}
+
+@media all and (min-width: 1360px) {
+  .first-menu-item,
+  .second-menu-item {
+    font-size: 1.6vw;
+  }
+
+  .title {
+    font-size: 7vw;
+    left: 87.3%;
+  }
+}
+
+@media all and (max-width: 1359px) and (min-width: 959px) {
+  .first-menu-item,
+  .second-menu-item {
+    font-size: 2.3vw;
+  }
+
+  .title {
+    font-size: 11vw;
+    left: 80.5%;
+  }
+}
+
+@media all and (max-width: 959px) and (min-width: 600px) {
+  .first-menu-item,
+  .second-menu-item {
+    font-size: 3vw;
+  }
+
+  .title {
+    font-size: 14vw;
+    left: 75%;
+  }
+}
+
+@media all and (max-width: 599px) and (min-width: 50px) {
+  .first-menu-item,
+  .second-menu-item {
+    font-size: 5vw;
+  }
+
+  .title {
+    font-size: 20vw;
+    top: 25%;
+    left: 65%;
+  }
+}

@@ -11,7 +11,9 @@ export type ShipsActionType =
   | 'SetPlanes'
   | 'SetAdditions';
 
-export type AppActionType = 'ChangeGameMode' | 'TogleBattlefield';
+export type AppActionType = 'ChangeGameMode' | 'TogleBattlefield' | 'SetGameState';
+
+export type GameState = 'InMainMenu' | 'CreatingRoom' | 'JoiningRoom' | 'InGame';
 
 export interface ShipsAction {
   type: ShipsActionType;
@@ -21,6 +23,8 @@ export interface ShipsAction {
 export interface AppState {
   mode: GameMode;
   battlefield: 'friendly' | 'enemy';
+  state: GameState;
+  cameraLook: [number, number, number];
 }
 
 export interface AppAction {

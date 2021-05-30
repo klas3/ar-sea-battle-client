@@ -67,7 +67,6 @@ const BattleMap = () => {
 
   useFrame(() => {
     waterMaterial.uniforms.time.value += 1.0 / 100.0;
-    renderer.render(scene, camera);
   });
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { Object3D, Mesh } from 'three';
 import { GameMode } from '../other/types';
-import { AppAction, AudioAction, ShipsAction } from './types';
+import { AppAction, AudioAction, GameState, ShipsAction } from './types';
 
 export const rotateShip = (shipIndex: number): ShipsAction => ({
   type: 'RotateShip',
@@ -65,4 +65,9 @@ export const enableAudio = (): AudioAction => ({
 
 export const togleBattlefield = (): AppAction => ({
   type: 'TogleBattlefield',
+});
+
+export const setGameState = (gameState: GameState): AppAction => ({
+  type: 'SetGameState',
+  payload: gameState,
 });

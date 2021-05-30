@@ -30,4 +30,6 @@ export const shipsMaxRotationsCount = 4;
 
 export const shipsRotationStep = 90;
 
-export const defaultCameraConfig = { position: new Vector3(0, 175, 5), far: 20000 };
+export const mainMenuCameraConfig = { position: new Vector3(300, 20, -105), far: 20000 };
+
+export const battleCameraConfig = { position: new Vector3(0, 175, 5), far: 20000 };

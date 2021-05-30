@@ -33,6 +33,7 @@ const shipsConfigsReducer = (state = defaultState, action: ShipsAction): ShipsSt
     });
     return { ...state, configs };
   }
+
   if (action.type === 'PlaceShip' && action.payload) {
     const { shipIndex, position, planesPositions } = action.payload;
     const configs = state.configs.map((config, index) => {
@@ -48,6 +49,7 @@ const shipsConfigsReducer = (state = defaultState, action: ShipsAction): ShipsSt
     });
     return { ...state, configs };
   }
+
   if (action.type === 'RemoveShip' && action.payload) {
     const { shipIndex } = action.payload;
     const configs = state.configs.map((config, index) => {
@@ -61,26 +63,32 @@ const shipsConfigsReducer = (state = defaultState, action: ShipsAction): ShipsSt
     });
     return { ...state, configs };
   }
+
   if (action.type === 'EmptyShipsModels') {
     return { ...state, models3D: [] };
   }
+
   if (action.type === 'SetShipsModels' && action.payload) {
     return { ...state, models3D: action.payload };
   }
+
   if (action.type === 'EmptyPositions' && action.payload) {
     action.payload.forEach((position: number) => {
       state.positions[position] = emptyZoneMark;
     });
     return state;
   }
+
   if (action.type === 'SetPlanes' && action.payload) {
     state.planes = action.payload;
     return state;
   }
+
   if (action.type === 'SetAdditions' && action.payload) {
     const { additionalX, additionalZ } = action.payload;
     return { ...state, additionalX, additionalZ };
   }
+
   if (action.type === 'ArrangeRandomly') {
     const positions = arrangeShipsRandomly();
     const shipsCoordinates = new Map<number, number[]>();
@@ -129,6 +137,7 @@ const shipsConfigsReducer = (state = defaultState, action: ShipsAction): ShipsSt
     });
     return { ...state, configs };
   }
+
   return state;
 };
 

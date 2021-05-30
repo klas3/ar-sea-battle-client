@@ -35,12 +35,10 @@ interface IProps {
 const Friendly3DBattlefield = (props: IProps) => {
   const { additionalX = 0, additionalZ = 0 } = props;
 
-  const {
-    configs: shipsConfigs,
-    models3D,
-    planes,
-    positions,
-  } = useAppSelector((state) => state.ships);
+  const shipsConfigs = useAppSelector((state) => state.ships.configs);
+  const models3D = useAppSelector((state) => state.ships.models3D);
+  const planes = useAppSelector((state) => state.ships.planes);
+  const positions = useAppSelector((state) => state.ships.positions);
   const dispatch = useAppDispatch();
 
   const [isShipsInitialized, setIsShipsInitialized] = useState(false);
@@ -71,7 +69,6 @@ const Friendly3DBattlefield = (props: IProps) => {
 
   const render = () => {
     models3D.forEach((ship) => ship.position.clamp(draggableLimit.min, draggableLimit.max));
-    renderer.render(scene, camera);
   };
 
   const disableCamera = () => gameService.setCameraEnabled(false);
@@ -82,6 +79,7 @@ const Friendly3DBattlefield = (props: IProps) => {
     planes.forEach((plane) => ((plane.material as MeshBasicMaterial).visible = false));
 
   const tryMarkPlanes = (event: ThreeEvent) => {
+    console.log(camera.position);
     const position = event.object.position;
     const { index } = event.object.userData;
     const { size } = shipsConfigs[index];

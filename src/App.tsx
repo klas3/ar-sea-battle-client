@@ -2,10 +2,11 @@ import Initial3DScene from './3D/Initial3DScene';
 import InitialARScene from './AR/InitialARScene';
 import { useAppDispatch, useAppSelector } from './hooks/reduxHooks';
 import { arrangeRandomly, setGameMode } from './redux/actions';
-import './styles/buttons.css';
+import './styles/ui.css';
 
 const App = () => {
   const gameMode = useAppSelector((state) => state.game.mode);
+  const gameState = useAppSelector((state) => state.game.state);
 
   const dispatch = useAppDispatch();
 
@@ -21,12 +22,16 @@ const App = () => {
 
   const randomlyArrangeShips = () => dispatch(arrangeRandomly());
 
+  if (gameState !== 'InGame') {
+    return scene;
+  }
+
   return (
     <>
-      <button className="random-arranging-button" onClick={randomlyArrangeShips}>
+      <button className="top-left-button" onClick={randomlyArrangeShips}>
         Arrange
       </button>
-      <button className="game-mode-button" onClick={gameModeSetter}>
+      <button className="top-right-button" onClick={gameModeSetter}>
         {gameModeButtonText}
       </button>
       {scene}
