@@ -15,6 +15,14 @@ button {
   text-align: center;
 }
 
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: rgba(77, 95, 135, 0.7);
+}
+
 input::placeholder {
   color: rgba(255, 255, 255, 0.255);
 }
@@ -28,14 +36,15 @@ input::placeholder {
   top: 0;
 }
 
-.sound-button {
+.confirm-button {
   bottom: 0;
+  right: 0;
 }
 
 .change-battlefield-button {
   right: 0;
   top: 0;
-  margin-right: 90px;
+  margin-right: 6vw;
 }
 
 .first-menu-item {
@@ -43,6 +52,7 @@ input::placeholder {
   left: 50%;
   width: 15em;
   font-size: 1.7vw;
+  margin: 0;
   transform: translate(-50%, -50%);
 }
 
@@ -51,6 +61,7 @@ input::placeholder {
   left: 50%;
   width: 15em;
   font-size: 1.7vw;
+  margin: 0;
   transform: translate(-50%, -50%);
 }
 
@@ -60,8 +71,10 @@ input::placeholder {
   z-index: 1;
   width: 100%;
   top: 25%;
+  left: 50%;
   font-size: 7vw;
   transform: translate(-50%, -50%);
+  text-align: center;
   color: #3b555cb6;
 }
 
@@ -73,43 +86,66 @@ input::placeholder {
 
   .title {
     font-size: 7vw;
-    left: 87.3%;
   }
 }
 
 @media all and (max-width: 1359px) and (min-width: 959px) {
   .first-menu-item,
   .second-menu-item {
-    font-size: 2.3vw;
+    font-size: 2.2vw;
+  }
+
+  button {
+    font-size: 1.5vw;
   }
 
   .title {
-    font-size: 11vw;
-    left: 80.5%;
+    font-size: 9vw;
   }
 }
 
 @media all and (max-width: 959px) and (min-width: 600px) {
   .first-menu-item,
   .second-menu-item {
-    font-size: 3vw;
+    font-size: 2.5vw;
+  }
+
+  button {
+    font-size: 2vw;
   }
 
   .title {
-    font-size: 14vw;
-    left: 75%;
+    font-size: 12vw;
   }
 }
 
 @media all and (max-width: 599px) and (min-width: 50px) {
   .first-menu-item,
   .second-menu-item {
-    font-size: 5vw;
+    font-size: 4vw;
+  }
+
+  button {
+    font-size: 3vw;
   }
 
   .title {
-    font-size: 20vw;
-    top: 25%;
-    left: 65%;
+    font-size: 16vw;
+  }
+}
+
+@media all and (max-height: 399px) and (min-height: 50px) {
+  .first-menu-item {
+    font-size: 4vh;
+    top: 55%;
+  }
+
+  .second-menu-item {
+    font-size: 4vh;
+    top: 68%;
+  }
+
+  .title {
+    font-size: 16vh;
   }
 }

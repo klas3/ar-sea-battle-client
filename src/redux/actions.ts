@@ -49,9 +49,12 @@ export const arrangeRandomly = (): ShipsAction => ({
   type: 'ArrangeRandomly',
 });
 
-export const setAdditions = (additionalX: number, additionalZ: number): ShipsAction => ({
+export const setAdditions = (
+  friendlyAdditionalX: number,
+  friendlyAdditionalZ: number,
+): ShipsAction => ({
   type: 'SetAdditions',
-  payload: { additionalX, additionalZ },
+  payload: { friendlyAdditionalX, friendlyAdditionalZ },
 });
 
 export const setAudio = (path: string, maxDistance: number): AudioAction => ({

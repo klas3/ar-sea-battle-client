@@ -53,7 +53,7 @@ const maxShipSize = 4;
 
 const getShipConfig = (shipSize: ShipSize, positionIndex: number): ShipConfig => ({
   path: modelsPathes[shipSize],
-  position: [...modelsPositions[shipSize][positionIndex]],
+  position: [...modelsPositions[shipSize][positionIndex]] as [number, number, number],
   scale: [...modelsScales[shipSize]],
   size: modelsSizes[shipSize],
   rotation: modelsRotations[shipSize],

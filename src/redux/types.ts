@@ -9,11 +9,12 @@ export type ShipsActionType =
   | 'EmptyPositions'
   | 'ArrangeRandomly'
   | 'SetPlanes'
-  | 'SetAdditions';
+  | 'SetAdditions'
+  | 'SetControls';
 
 export type AppActionType = 'ChangeGameMode' | 'TogleBattlefield' | 'SetGameState';
 
-export type GameState = 'InMainMenu' | 'CreatingRoom' | 'JoiningRoom' | 'InGame';
+export type GameState = 'InMainMenu' | 'CreatingRoom' | 'JoiningRoom' | 'Arranging' | 'InGame';
 
 export interface ShipsAction {
   type: ShipsActionType;

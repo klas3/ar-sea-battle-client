@@ -7,7 +7,7 @@ export interface DraggableLimit {
 
 export interface ShipConfig {
   path: string;
-  position: number[];
+  position: [number, number, number];
   scale: number[];
   size: number;
   rotation: number;
@@ -21,8 +21,8 @@ export interface ShipsState {
   models3D: Object3D[];
   positions: number[];
   planes: THREE.Mesh[];
-  additionalX: number;
-  additionalZ: number;
+  friendlyAdditionalX: number;
+  friendlyAdditionalZ: number;
 }
 
 export type ShipSize = 'small' | 'medium' | 'large' | 'largest';

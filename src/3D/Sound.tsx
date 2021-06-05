@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { useThree } from 'react-three-fiber';
+import { useThree } from '@react-three/fiber';
 import { AudioListener, PositionalAudio } from 'three';
 import { useAppSelector } from '../hooks/reduxHooks';
 import { audioLoader } from '../other/tools';

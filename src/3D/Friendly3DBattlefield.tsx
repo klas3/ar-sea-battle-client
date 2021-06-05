@@ -1,5 +1,5 @@
 import { Suspense, useEffect, useState } from 'react';
-import { useFrame, useThree } from 'react-three-fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { DragControls } from 'three/examples/jsm/controls/DragControls';
 import { Event as ThreeEvent, MeshBasicMaterial, Object3D } from 'three';
 import LoadingBox from './LoadingBox';
@@ -26,22 +26,25 @@ import { convertToRadians, getDraggableLimit, getSegmentMidpoint } from '../othe
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { isPositionAvailable } from '../other/shipsArranging';
 import { diractionalRay, raycaster } from '../other/tools';
+import { friendlyBattlefieldGridName } from '../other/battleMapConfigs';
 
 interface IProps {
-  additionalX?: number;
-  additionalZ?: number;
+  arranging?: boolean;
 }
 
 const Friendly3DBattlefield = (props: IProps) => {
-  const { additionalX = 0, additionalZ = 0 } = props;
+  const { arranging = true } = props;
 
   const shipsConfigs = useAppSelector((state) => state.ships.configs);
   const models3D = useAppSelector((state) => state.ships.models3D);
   const planes = useAppSelector((state) => state.ships.planes);
   const positions = useAppSelector((state) => state.ships.positions);
+  const additionalX = useAppSelector((state) => state.ships.friendlyAdditionalX);
+  const additionalZ = useAppSelector((state) => state.ships.friendlyAdditionalZ);
+
   const dispatch = useAppDispatch();
 
-  const [isShipsInitialized, setIsShipsInitialized] = useState(false);
+  const [controlsDisposes, setControlsDisposes] = useState<Function[]>([]);
 
   const { scene, camera, gl: renderer } = useThree();
 
@@ -52,8 +55,16 @@ const Friendly3DBattlefield = (props: IProps) => {
       planeDefaultHeight,
       additionalZ,
     );
+    scene.remove(scene.getObjectByName(friendlyBattlefieldGridName) as Object3D);
     createdPlanes.forEach((plane) => scene.add(plane));
-    scene.add(gridCreator.createGrid(additionalX, planeDefaultHeight, additionalZ));
+    scene.add(
+      gridCreator.createGrid(
+        additionalX,
+        planeDefaultHeight,
+        additionalZ,
+        friendlyBattlefieldGridName,
+      ),
+    );
     dispatch(setPlanes(createdPlanes));
     return () => {
       planes.forEach((plane) => scene.remove(plane));
@@ -79,7 +90,6 @@ const Friendly3DBattlefield = (props: IProps) => {
     planes.forEach((plane) => ((plane.material as MeshBasicMaterial).visible = false));
 
   const tryMarkPlanes = (event: ThreeEvent) => {
-    console.log(camera.position);
     const position = event.object.position;
     const { index } = event.object.userData;
     const { size } = shipsConfigs[index];
@@ -178,15 +188,22 @@ const Friendly3DBattlefield = (props: IProps) => {
     ));
   }
 
-  if (!isShipsInitialized && models3D.length) {
+  if (controlsDisposes.length && !arranging) {
+    controlsDisposes.forEach((cb) => cb());
+    setControlsDisposes([]);
+  }
+
+  if (!controlsDisposes.length && models3D.length && arranging) {
+    const disposesArray: Function[] = [];
     models3D.forEach((ship) => {
       const controls = new DragControls([ship], camera, renderer.domElement);
       controls.transformGroup = true;
       controls.addEventListener('drag', tryMarkPlanes);
       controls.addEventListener('dragstart', disableCamera);
       controls.addEventListener('dragend', handleDragEnd);
+      disposesArray.push(() => controls.dispose());
     });
-    setIsShipsInitialized(true);
+    setControlsDisposes(disposesArray);
   }
 
   return <Suspense fallback={<LoadingBox />}>{renderedShips}</Suspense>;

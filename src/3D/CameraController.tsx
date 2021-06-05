@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { useThree } from 'react-three-fiber';
+import { useThree } from '@react-three/fiber';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 interface IProps {

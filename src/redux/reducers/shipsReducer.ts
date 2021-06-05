@@ -10,14 +10,13 @@ import getDefaultShipsConfigs from '../../other/shipsConfigs';
 import { ShipsState } from '../../other/types';
 import { ShipsAction } from '../types';
 
-// TODO remove initialization to ArrangementBattlefield
 const defaultState: ShipsState = {
   configs: getDefaultShipsConfigs(),
   positions: getDefaultPositions(),
   models3D: [],
   planes: [],
-  additionalX: 0,
-  additionalZ: 0,
+  friendlyAdditionalX: 0,
+  friendlyAdditionalZ: 0,
 };
 
 const shipsConfigsReducer = (state = defaultState, action: ShipsAction): ShipsState => {
@@ -54,10 +53,12 @@ const shipsConfigsReducer = (state = defaultState, action: ShipsAction): ShipsSt
     const { shipIndex } = action.payload;
     const configs = state.configs.map((config, index) => {
       if (index === shipIndex) {
-        const { additionalX, additionalZ } = state;
+        const { friendlyAdditionalX, friendlyAdditionalZ } = state;
         config.isPlaced = false;
         config.planesPositions = [];
-        config.position = getDefaultShipsConfigs(additionalX, additionalZ)[shipIndex].position;
+        config.position = getDefaultShipsConfigs(friendlyAdditionalX, friendlyAdditionalZ)[
+          shipIndex
+        ].position;
       }
       return config;
     });
@@ -85,8 +86,13 @@ const shipsConfigsReducer = (state = defaultState, action: ShipsAction): ShipsSt
   }
 
   if (action.type === 'SetAdditions' && action.payload) {
-    const { additionalX, additionalZ } = action.payload;
-    return { ...state, additionalX, additionalZ };
+    const { friendlyAdditionalX, friendlyAdditionalZ } = action.payload;
+    const configs = state.configs.map((config) => {
+      config.position[0] += friendlyAdditionalX;
+      config.position[2] += friendlyAdditionalZ;
+      return config;
+    });
+    return { ...state, configs, friendlyAdditionalX, friendlyAdditionalZ };
   }
 
   if (action.type === 'ArrangeRandomly') {

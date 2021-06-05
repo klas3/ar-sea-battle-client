@@ -10,7 +10,7 @@ const MainMenu = () => {
 
   const onJoinGameButtonClick = () => dispatch(setGameState('JoiningRoom'));
 
-  const onJoinButtonClick = () => dispatch(setGameState('InGame'));
+  const onJoinButtonClick = () => dispatch(setGameState('Arranging'));
 
   const onBackButtonClick = () => dispatch(setGameState('InMainMenu'));
 
@@ -47,7 +47,7 @@ const MainMenu = () => {
 
   const backButton = gameState !== 'InMainMenu' && (
     <button className="random-arranging-button" onClick={onBackButtonClick}>
-      Back
+      ᐸ
     </button>
   );
 

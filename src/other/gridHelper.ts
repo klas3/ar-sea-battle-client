@@ -2,8 +2,14 @@ import { GridHelper, Mesh, MeshBasicMaterial, PlaneGeometry } from 'three';
 import { battlefieldSize, gridSize } from './constants';
 
 class GridCreator {
-  public createGrid = (additionalX: number, additionalY: number, additionalZ: number) => {
+  public createGrid = (
+    additionalX: number,
+    additionalY: number,
+    additionalZ: number,
+    name: string,
+  ) => {
     const gridHelper = new GridHelper(gridSize, battlefieldSize);
+    gridHelper.name = name;
     gridHelper.position.y += additionalY;
     gridHelper.position.x += additionalX;
     gridHelper.position.z += additionalZ;
@@ -26,12 +32,12 @@ class GridCreator {
       plane.userData = { index: i };
 
       plane.position.set(
-        (i % battlefieldSize) * geometrySize - gridSize / 2 + battlefieldSize + additionalZ,
+        (i % battlefieldSize) * geometrySize - gridSize / 2 + battlefieldSize + additionalX,
         additionalY,
         Math.floor(i / battlefieldSize) * geometrySize -
           gridSize / 2 +
           battlefieldSize +
-          additionalX,
+          additionalZ,
       );
 
       createdPlanes.push(plane);

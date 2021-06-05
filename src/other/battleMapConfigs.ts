@@ -31,3 +31,15 @@ export const cloudMaterial = new MeshLambertMaterial({
   map: textureLoader.load(cloudTextureFilePath),
   transparent: true,
 });
+
+export const friendlyBattlefieldAdditionalX = 110;
+
+export const friendlyBattlefieldAdditionalZ = 0;
+
+export const enemyBattlefieldAdditionalX = -110;
+
+export const enemyBattlefieldAdditionalZ = 0;
+
+export const friendlyBattlefieldGridName = 'friendlyGrid';
+
+export const enemyBattlefieldGridName = 'enemyGrid';
