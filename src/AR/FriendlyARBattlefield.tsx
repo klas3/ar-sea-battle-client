@@ -3,10 +3,12 @@ import { useAppSelector } from '../hooks/reduxHooks';
 
 const FriendlyARBattlefield = () => {
   const shipsConfigs = useAppSelector((state) => state.ships.configs);
+  const additionalX = useAppSelector((state) => state.ships.friendlyAdditionalX);
+  const additionalZ = useAppSelector((state) => state.ships.friendlyAdditionalZ);
 
   const renderedShips = shipsConfigs.map((config, index) => {
-    const position = `${config.position[0] / arCoordsСoefficient} ${0} ${
-      config.position[2] / arCoordsСoefficient
+    const position = `${(config.position[0] - additionalX) / arCoordsСoefficient} ${0} ${
+      (config.position[2] - additionalZ) / arCoordsСoefficient
     }`;
     const [scaleX, scaleY, scaleZ] = config.scale;
     const scale = `${scaleX / arCoordsСoefficient} ${scaleY / arCoordsСoefficient} ${

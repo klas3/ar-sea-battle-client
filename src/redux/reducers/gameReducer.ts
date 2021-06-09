@@ -1,15 +1,21 @@
+import { DoubleSide, MeshBasicMaterial } from 'three';
 import { AppAction, AppState } from '../types';
+import { getEnemyDefaultPositions } from '../../other/helpers';
 
 const defaultState: AppState = {
   mode: '3D',
   battlefield: 'friendly',
   state: 'InMainMenu',
-  cameraLook: [3, 5, 5],
+  enemyBattlefield: getEnemyDefaultPositions(),
+  selectedEnemyPosition: undefined,
+  turn: 'You',
+  enemyPlanes: [],
 };
 
-const gameReducer = (state = defaultState, action: AppAction) => {
+const gameReducer = (state = defaultState, action: AppAction): AppState => {
   if (action.type === 'ChangeGameMode' && action.payload) {
     state.mode = action.payload;
+    state.selectedEnemyPosition = undefined;
   }
 
   if (action.type === 'TogleBattlefield') {
@@ -18,6 +24,29 @@ const gameReducer = (state = defaultState, action: AppAction) => {
 
   if (action.type === 'SetGameState' && action.payload) {
     state.state = action.payload;
+  }
+
+  if (action.type === 'SetSelectedEnemyPosition') {
+    state.selectedEnemyPosition = action.payload;
+  }
+
+  if (action.type === 'SetEnemyBattlefield' && action.payload) {
+    state.enemyBattlefield = action.payload;
+  }
+
+  if (action.type === 'Shoot' && state.selectedEnemyPosition) {
+    if (state.mode === '3D') {
+      state.enemyPlanes[state.selectedEnemyPosition].material = new MeshBasicMaterial({
+        color: 0xffff00,
+        side: DoubleSide,
+      });
+    }
+    state.turn = state.turn === 'You' ? 'Enemy' : 'You';
+    state.selectedEnemyPosition = undefined;
+  }
+
+  if (action.type === 'SetEnemyPlanes' && action.payload) {
+    state.enemyPlanes = action.payload;
   }
 
   return state;

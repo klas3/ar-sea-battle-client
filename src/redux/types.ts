@@ -1,3 +1,4 @@
+import { Mesh } from 'three';
 import { GameMode } from '../other/types';
 
 export type ShipsActionType =
@@ -12,7 +13,14 @@ export type ShipsActionType =
   | 'SetAdditions'
   | 'SetControls';
 
-export type AppActionType = 'ChangeGameMode' | 'TogleBattlefield' | 'SetGameState';
+export type AppActionType =
+  | 'ChangeGameMode'
+  | 'TogleBattlefield'
+  | 'SetGameState'
+  | 'SetEnemyBattlefield'
+  | 'SetSelectedEnemyPosition'
+  | 'Shoot'
+  | 'SetEnemyPlanes';
 
 export type GameState = 'InMainMenu' | 'CreatingRoom' | 'JoiningRoom' | 'Arranging' | 'InGame';
 
@@ -25,7 +33,10 @@ export interface AppState {
   mode: GameMode;
   battlefield: 'friendly' | 'enemy';
   state: GameState;
-  cameraLook: [number, number, number];
+  enemyBattlefield: number[];
+  selectedEnemyPosition: number | undefined;
+  turn: 'You' | 'Enemy';
+  enemyPlanes: Mesh[];
 }
 
 export interface AppAction {

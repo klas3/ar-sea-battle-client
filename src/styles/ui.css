@@ -78,6 +78,19 @@ input::placeholder {
   color: #3b555cb6;
 }
 
+.turn {
+  font-family: EvilEmpire;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0.3em;
+  text-align: center;
+  font-size: 3vw;
+  color: #3b555c;
+}
+
 @media all and (min-width: 1360px) {
   .first-menu-item,
   .second-menu-item {

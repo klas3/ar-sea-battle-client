@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useThree } from '@react-three/fiber';
-import { Mesh, MeshBasicMaterial } from 'three';
+import { MeshBasicMaterial } from 'three';
 import { planeDefaultHeight, battlePlaneMaterial } from '../other/constants';
 import gridCreator from '../other/gridHelper';
 import { mouse, raycaster } from '../other/tools';
 import { enemyBattlefieldGridName } from '../other/battleMapConfigs';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { setEnemyPlanes, setSelectedEnemyPosition } from '../redux/actions';
 
 interface IProps {
   additionalX?: number;
@@ -12,8 +14,13 @@ interface IProps {
 }
 
 const Enemy3DBattlefield = (props: IProps) => {
-  const [planes, setPlanes] = useState<Mesh[]>([]);
   const { scene, camera, gl: renderer } = useThree();
+
+  const enemyBattlefield = useAppSelector((state) => state.game.enemyBattlefield);
+  const turn = useAppSelector((state) => state.game.turn);
+  const planes = useAppSelector((state) => state.game.enemyPlanes);
+
+  const dispatch = useAppDispatch();
 
   const { additionalX = 0, additionalZ = 0 } = props;
 
@@ -30,16 +37,26 @@ const Enemy3DBattlefield = (props: IProps) => {
 
   const markCell = useCallback(
     (mouseX: number, mouseY: number) => {
+      if (turn !== 'You') {
+        return;
+      }
       mouse.x = mouseX;
       mouse.y = mouseY;
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(planes);
-      if (intersects.length > 0) {
-        const material = planes[intersects[0].object.userData.index].material as MeshBasicMaterial;
-        material.visible = true;
+      if (intersects.length === 0) {
+        return;
       }
+      const selectedIndex = intersects[0].object.userData.index;
+      if (enemyBattlefield[selectedIndex] !== undefined) {
+        return;
+      }
+      planes.forEach((plane) => ((plane.material as MeshBasicMaterial).visible = false));
+      const material = planes[selectedIndex].material as MeshBasicMaterial;
+      material.visible = true;
+      dispatch(setSelectedEnemyPosition(selectedIndex));
     },
-    [camera, planes],
+    [camera, planes, dispatch, turn, enemyBattlefield],
   );
 
   const markCellOnClick = useCallback(
@@ -68,6 +85,21 @@ const Enemy3DBattlefield = (props: IProps) => {
     [markCell, renderer.domElement],
   );
 
+  const onDocumentMouseMove = useCallback(
+    (event: MouseEvent) => {
+      if (!renderer.domElement || turn !== 'You') {
+        document.body.style.cursor = 'default';
+        return;
+      }
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(planes);
+      document.body.style.cursor = intersects.length > 0 ? 'pointer' : 'default';
+    },
+    [camera, planes, renderer.domElement, turn],
+  );
+
   const addGridInteraction = () => {
     if (!planes.length) {
       const createdPlanes = gridCreator.createPlanes(
@@ -78,15 +110,17 @@ const Enemy3DBattlefield = (props: IProps) => {
       );
       createdPlanes.forEach((plane) => scene.add(plane));
       scene.add(grid);
-      setPlanes(createdPlanes);
+      dispatch(setEnemyPlanes(createdPlanes));
     }
 
     document.addEventListener('click', markCellOnClick);
     document.addEventListener('touchstart', markCellOnTouch);
+    document.addEventListener('mousemove', onDocumentMouseMove);
 
     return () => {
       document.removeEventListener('click', markCellOnClick);
       document.removeEventListener('touchstart', markCellOnTouch);
+      document.removeEventListener('mousemove', onDocumentMouseMove);
     };
   };
 
@@ -98,6 +132,8 @@ const Enemy3DBattlefield = (props: IProps) => {
     markCellOnTouch,
     grid,
     planes,
+    dispatch,
+    onDocumentMouseMove,
   ]);
 
   return null;

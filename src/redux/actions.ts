@@ -74,3 +74,22 @@ export const setGameState = (gameState: GameState): AppAction => ({
   type: 'SetGameState',
   payload: gameState,
 });
+
+export const setEnemyBattlefield = (battlefield: number[]): AppAction => ({
+  type: 'SetEnemyBattlefield',
+  payload: battlefield,
+});
+
+export const setSelectedEnemyPosition = (position: number): AppAction => ({
+  type: 'SetSelectedEnemyPosition',
+  payload: position,
+});
+
+export const shoot = (): AppAction => ({
+  type: 'Shoot',
+});
+
+export const setEnemyPlanes = (planes: Mesh[]): AppAction => ({
+  type: 'SetEnemyPlanes',
+  payload: planes,
+});

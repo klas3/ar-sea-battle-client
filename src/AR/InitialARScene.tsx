@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import EnemyARBattlefield from './EnemyARBattlefield';
-import { togleBattlefield } from '../redux/actions';
+import { setEnemyPlanes, togleBattlefield } from '../redux/actions';
 import FriendlyARBattlefield from './FriendlyARBattlefield';
 
 const InitialARScene = () => {
   const battlefieldType = useAppSelector((state) => state.game.battlefield);
+  const gameState = useAppSelector((state) => state.game.state);
 
   const dispatch = useAppDispatch();
 
@@ -19,6 +20,7 @@ const InitialARScene = () => {
   const onBattlefieldButtonClick = () => dispatch(togleBattlefield());
 
   useEffect(() => {
+    dispatch(setEnemyPlanes([]));
     scene.current = document.getElementsByTagName('a-scene').item(0);
     return () => {
       if (scene.current) {
@@ -30,13 +32,15 @@ const InitialARScene = () => {
         videos.forEach((video) => video.remove());
       }
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
-      <button className="change-battlefield-button" onClick={onBattlefieldButtonClick}>
-        {changeBattlefieldText}
-      </button>
+      {gameState !== 'Arranging' && (
+        <button className="change-battlefield-button" onClick={onBattlefieldButtonClick}>
+          {changeBattlefieldText}
+        </button>
+      )}
       {/* @ts-ignore */}
       <a-scene
         embedded

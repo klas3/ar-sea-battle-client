@@ -8,11 +8,14 @@ export const getSegmentMidpoint = (startPoint: number, endPoint: number) =>
   (startPoint + endPoint) / 2;
 
 export const getDraggableLimit = (additionalX: number, additionalZ: number) => ({
-  min: new Vector3(-160 + additionalX, 0, -100 + additionalZ),
-  max: new Vector3(160 + additionalX, 4, 100 + additionalZ),
+  min: new Vector3(-160 + additionalX, 0, -(battlefieldSize ** 2) + additionalZ),
+  max: new Vector3(160 + additionalX, 4, battlefieldSize ** 2 + additionalZ),
 });
 
 export const getDefaultPositions = (): number[] => new Array(battlefieldSize ** 2).fill(-1);
+
+export const getEnemyDefaultPositions = (): number[] =>
+  new Array(battlefieldSize ** 2).fill(undefined);
 
 export const getRowsFromBattlefieldPositions = (array: RandomArrangingPosition[]) => {
   const rows = [];

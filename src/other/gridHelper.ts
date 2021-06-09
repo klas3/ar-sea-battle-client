@@ -17,7 +17,7 @@ class GridCreator {
   };
 
   public createPlanes = (
-    material: THREE.MeshBasicMaterialParameters,
+    material?: THREE.MeshBasicMaterialParameters,
     additionalX: number = 0,
     additionalY: number = 0,
     additionalZ: number = 0,

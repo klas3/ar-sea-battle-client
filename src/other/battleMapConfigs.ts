@@ -43,3 +43,5 @@ export const enemyBattlefieldAdditionalZ = 0;
 export const friendlyBattlefieldGridName = 'friendlyGrid';
 
 export const enemyBattlefieldGridName = 'enemyGrid';
+
+export const arEnemyBattlefieldPlaneColor = '#366191';

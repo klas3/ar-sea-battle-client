@@ -5,13 +5,15 @@ import {
   friendlyBattlefieldAdditionalX,
   friendlyBattlefieldAdditionalZ,
 } from './other/battleMapConfigs';
-import { arrangeRandomly, setAdditions, setGameMode, setGameState } from './redux/actions';
+import { arrangeRandomly, setAdditions, setGameMode, setGameState, shoot } from './redux/actions';
 import './styles/ui.css';
 
 const App = () => {
   const gameMode = useAppSelector((state) => state.game.mode);
   const gameState = useAppSelector((state) => state.game.state);
   const shipsConfigs = useAppSelector((state) => state.ships.configs);
+  const selectedEnemyPosition = useAppSelector((state) => state.game.selectedEnemyPosition);
+  const turn = useAppSelector((state) => state.game.turn);
 
   const isAllShipsPlaced = shipsConfigs.every((config) => config.isPlaced);
 
@@ -36,15 +38,28 @@ const App = () => {
 
   const isArranging = gameState === 'Arranging';
 
+  const confirmButtonText = isArranging ? 'Confirm' : 'Fire!';
+
+  const shootEnemy = () => dispatch(shoot());
+
+  const confirmButtonHandler = isArranging ? onConfirmButtonClick : shootEnemy;
+
+  const confirmButtonVisibility = isArranging
+    ? isAllShipsPlaced
+    : selectedEnemyPosition !== undefined;
+
+  const turnText = turn === 'You' ? 'Your turn' : "Enemy's turn";
+
   if (gameState !== 'InGame' && !isArranging) {
     return scene;
   }
 
   return (
     <>
-      {isAllShipsPlaced && isArranging && (
-        <button className="confirm-button" onClick={onConfirmButtonClick}>
-          Confirm
+      {gameState === 'InGame' && <p className="turn">{turnText}</p>}
+      {confirmButtonVisibility && (
+        <button className="confirm-button" onClick={confirmButtonHandler}>
+          {confirmButtonText}
         </button>
       )}
       {isArranging && (

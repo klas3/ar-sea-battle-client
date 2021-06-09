@@ -189,7 +189,7 @@ const Friendly3DBattlefield = (props: IProps) => {
   }
 
   if (controlsDisposes.length && !arranging) {
-    controlsDisposes.forEach((cb) => cb());
+    controlsDisposes.forEach((disposer) => disposer());
     setControlsDisposes([]);
   }
 

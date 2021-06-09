@@ -1,4 +1,4 @@
-import { useLoader } from 'react-three-fiber';
+import { useLoader } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { useMemo } from 'react';
 import { Object3D } from 'three';
@@ -25,7 +25,7 @@ const ShipInitialization = (props: IProps) => {
   copiedScene.scale.set(scaleX, scaleY, scaleZ);
 
   if (reference) {
-    setTimeout(() => reference(copiedScene), 0);
+    setTimeout(() => reference(copiedScene));
   }
 
   return <primitive object={copiedScene} position={position} />;
