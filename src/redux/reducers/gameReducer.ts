@@ -10,6 +10,7 @@ const defaultState: AppState = {
   selectedEnemyPosition: undefined,
   turn: 'You',
   enemyPlanes: [],
+  gameCode: '',
 };
 
 const gameReducer = (state = defaultState, action: AppAction): AppState => {
@@ -47,6 +48,10 @@ const gameReducer = (state = defaultState, action: AppAction): AppState => {
 
   if (action.type === 'SetEnemyPlanes' && action.payload) {
     state.enemyPlanes = action.payload;
+  }
+
+  if (action.type === 'SetGameCode' && action.payload) {
+    state.gameCode = action.payload;
   }
 
   return state;

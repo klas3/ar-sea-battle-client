@@ -20,7 +20,8 @@ export type AppActionType =
   | 'SetEnemyBattlefield'
   | 'SetSelectedEnemyPosition'
   | 'Shoot'
-  | 'SetEnemyPlanes';
+  | 'SetEnemyPlanes'
+  | 'SetGameCode';
 
 export type GameState = 'InMainMenu' | 'CreatingRoom' | 'JoiningRoom' | 'Arranging' | 'InGame';
 
@@ -37,6 +38,7 @@ export interface AppState {
   selectedEnemyPosition: number | undefined;
   turn: 'You' | 'Enemy';
   enemyPlanes: Mesh[];
+  gameCode: string;
 }
 
 export interface AppAction {

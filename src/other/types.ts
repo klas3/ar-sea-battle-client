@@ -33,3 +33,8 @@ export interface RandomArrangingPosition {
   value: number;
   index: number;
 }
+
+export interface ServerResponse {
+  data?: {};
+  error?: string;
+}

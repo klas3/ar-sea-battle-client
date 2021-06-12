@@ -93,3 +93,8 @@ export const setEnemyPlanes = (planes: Mesh[]): AppAction => ({
   type: 'SetEnemyPlanes',
   payload: planes,
 });
+
+export const setGameCode = (code: string): AppAction => ({
+  type: 'SetGameCode',
+  payload: code,
+});

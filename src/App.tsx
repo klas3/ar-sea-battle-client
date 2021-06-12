@@ -1,11 +1,10 @@
+import { useEffect } from 'react';
 import Initial3DScene from './3D/Initial3DScene';
 import InitialARScene from './AR/InitialARScene';
 import { useAppDispatch, useAppSelector } from './hooks/reduxHooks';
-import {
-  friendlyBattlefieldAdditionalX,
-  friendlyBattlefieldAdditionalZ,
-} from './other/battleMapConfigs';
-import { arrangeRandomly, setAdditions, setGameMode, setGameState, shoot } from './redux/actions';
+import {} from './other/battleMapConfigs';
+import { arrangeRandomly, setGameMode, shoot } from './redux/actions';
+import gameService from './services/gameService';
 import './styles/ui.css';
 
 const App = () => {
@@ -23,10 +22,7 @@ const App = () => {
 
   const set3DGameMode = () => dispatch(setGameMode('3D'));
 
-  const onConfirmButtonClick = () => {
-    dispatch(setAdditions(friendlyBattlefieldAdditionalX, friendlyBattlefieldAdditionalZ));
-    dispatch(setGameState('InGame'));
-  };
+  const onConfirmButtonClick = () => gameService.sendArrangedShips();
 
   const scene = gameMode === '3D' ? <Initial3DScene /> : <InitialARScene />;
 
@@ -49,6 +45,13 @@ const App = () => {
     : selectedEnemyPosition !== undefined;
 
   const turnText = turn === 'You' ? 'Your turn' : "Enemy's turn";
+
+  useEffect(() => {
+    return () => {
+      console.log('disconnect');
+      gameService.disconnect();
+    };
+  }, []);
 
   if (gameState !== 'InGame' && !isArranging) {
     return scene;

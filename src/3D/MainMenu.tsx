@@ -1,20 +1,29 @@
+import { ChangeEvent } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { copyElementTextToClipboard } from '../other/helpers';
-import { setGameState } from '../redux/actions';
+import { setGameCode, setGameState } from '../redux/actions';
+import gameService from '../services/gameService';
 
 const MainMenu = () => {
   const gameState = useAppSelector((state) => state.game.state);
+  const gameCode = useAppSelector((state) => state.game.gameCode);
   const dispatch = useAppDispatch();
 
-  const onCreateButtonClick = () => dispatch(setGameState('CreatingRoom'));
+  const onCreateButtonClick = async () => {
+    await gameService.createGame();
+    dispatch(setGameState('CreatingRoom'));
+  };
 
   const onJoinGameButtonClick = () => dispatch(setGameState('JoiningRoom'));
 
-  const onJoinButtonClick = () => dispatch(setGameState('Arranging'));
+  const onJoinButtonClick = async () => gameService.joinGame(gameCode);
 
   const onBackButtonClick = () => dispatch(setGameState('InMainMenu'));
 
   const onCopyButtonClick = () => copyElementTextToClipboard('gameCode');
+
+  const onGameCodeTextChange = (event: ChangeEvent<HTMLInputElement>) =>
+    dispatch(setGameCode(event.target.value));
 
   const mainMenu = gameState === 'InMainMenu' && (
     <>
@@ -29,7 +38,7 @@ const MainMenu = () => {
 
   const createGame = gameState === 'CreatingRoom' && (
     <>
-      <input id="gameCode" value="12345" className="first-menu-item" disabled />
+      <input id="gameCode" value={gameCode} className="first-menu-item" disabled />
       <button className="second-menu-item" onClick={onCopyButtonClick}>
         Copy
       </button>
@@ -38,7 +47,13 @@ const MainMenu = () => {
 
   const joinGame = gameState === 'JoiningRoom' && (
     <>
-      <input placeholder="Room code" className="first-menu-item" />
+      <input
+        onChange={onGameCodeTextChange}
+        value={gameCode}
+        id="gameCodeInput"
+        placeholder="Room code"
+        className="first-menu-item"
+      />
       <button className="second-menu-item" onClick={onJoinButtonClick}>
         Join
       </button>
