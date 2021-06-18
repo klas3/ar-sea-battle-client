@@ -39,20 +39,11 @@ export const getColumnsFromBattlefieldPositions = (array: RandomArrangingPositio
 
 export const getRandomNumber = (max: number) => Math.floor(Math.random() * max);
 
-export const copyElementTextToClipboard = (elementId: string) => {
-  const listener = (event: ClipboardEvent) => {
-    const gameCodeElement = document.getElementById(elementId);
-    if (!gameCodeElement || !event.clipboardData) {
-      return;
-    }
-    const gameCode = gameCodeElement.getAttribute('value');
-    if (!gameCode) {
-      return;
-    }
-    event.clipboardData.setData('text/plain', gameCode);
-    event.preventDefault();
-    document.removeEventListener('copy', listener);
-  };
-  document.addEventListener('copy', listener);
+export const copyTextToClipboard = (text: string) => {
+  const elem: any = document.createElement('textarea');
+  elem.value = text;
+  document.body.appendChild(elem);
+  elem.select();
   document.execCommand('copy');
+  document.body.removeChild(elem);
 };

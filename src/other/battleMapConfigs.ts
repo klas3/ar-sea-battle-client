@@ -1,9 +1,13 @@
-import { MeshLambertMaterial, RepeatWrapping, Vector3 } from 'three';
+import { DoubleSide, MeshBasicMaterial, MeshLambertMaterial, RepeatWrapping, Vector3 } from 'three';
 import { textureLoader } from './tools';
 
 const waterTextureFilePath = 'textures/waternormals.jpg';
 
 const cloudTextureFilePath = 'textures/cloud.png';
+
+export const crossTextureFilePath = 'textures/cross.png';
+
+export const emptyPositionColor = '#ff4f4f';
 
 export const sun = new Vector3();
 
@@ -30,6 +34,16 @@ export const waterConfig = {
 export const cloudMaterial = new MeshLambertMaterial({
   map: textureLoader.load(cloudTextureFilePath),
   transparent: true,
+});
+
+export const crossMaterial = new MeshBasicMaterial({
+  map: textureLoader.load(crossTextureFilePath),
+  transparent: true,
+});
+
+export const emptyPositiondMaterial = new MeshBasicMaterial({
+  color: emptyPositionColor,
+  side: DoubleSide,
 });
 
 export const friendlyBattlefieldAdditionalX = 110;

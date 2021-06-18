@@ -1,5 +1,5 @@
 import { Mesh } from 'three';
-import { GameMode } from '../other/types';
+import { GameMode, Turn } from '../other/types';
 
 export type ShipsActionType =
   | 'RotateShip'
@@ -11,7 +11,9 @@ export type ShipsActionType =
   | 'ArrangeRandomly'
   | 'SetPlanes'
   | 'SetAdditions'
-  | 'SetControls';
+  | 'SetControls'
+  | 'DropShipsState'
+  | 'MarkMyField';
 
 export type AppActionType =
   | 'ChangeGameMode'
@@ -19,11 +21,23 @@ export type AppActionType =
   | 'SetGameState'
   | 'SetEnemyBattlefield'
   | 'SetSelectedEnemyPosition'
-  | 'Shoot'
+  | 'MarkEnemyField'
   | 'SetEnemyPlanes'
-  | 'SetGameCode';
+  | 'SetGameCode'
+  | 'SetIsLoading'
+  | 'SetAppError'
+  | 'StartGame'
+  | 'SetTurn';
 
-export type GameState = 'InMainMenu' | 'CreatingRoom' | 'JoiningRoom' | 'Arranging' | 'InGame';
+export type GameState =
+  | 'InMainMenu'
+  | 'CreatingRoom'
+  | 'JoiningRoom'
+  | 'Arranging'
+  | 'ConfirmedArranging'
+  | 'InGame'
+  | 'WinnerScreen'
+  | 'LooserScreen';
 
 export interface ShipsAction {
   type: ShipsActionType;
@@ -32,28 +46,18 @@ export interface ShipsAction {
 
 export interface AppState {
   mode: GameMode;
-  battlefield: 'friendly' | 'enemy';
+  selectedARBattlefield: 'friendly' | 'enemy';
   state: GameState;
   enemyBattlefield: number[];
   selectedEnemyPosition: number | undefined;
-  turn: 'You' | 'Enemy';
+  turn: Turn;
   enemyPlanes: Mesh[];
   gameCode: string;
+  isLoading: boolean;
+  appError: string;
 }
 
 export interface AppAction {
   type: AppActionType;
-  payload?: any;
-}
-
-export type AudioActionType = 'SetAudio' | 'EnableAudio';
-
-export interface AudioState {
-  path: string;
-  maxDistance: number;
-}
-
-export interface AudioAction {
-  type: AudioActionType;
   payload?: any;
 }

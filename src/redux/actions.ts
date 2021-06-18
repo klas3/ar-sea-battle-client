@@ -1,6 +1,6 @@
 import { Object3D, Mesh } from 'three';
-import { GameMode } from '../other/types';
-import { AppAction, AudioAction, GameState, ShipsAction } from './types';
+import { GameMode, Turn } from '../other/types';
+import { AppAction, GameState, ShipsAction } from './types';
 
 export const rotateShip = (shipIndex: number): ShipsAction => ({
   type: 'RotateShip',
@@ -57,13 +57,17 @@ export const setAdditions = (
   payload: { friendlyAdditionalX, friendlyAdditionalZ },
 });
 
-export const setAudio = (path: string, maxDistance: number): AudioAction => ({
-  type: 'SetAudio',
-  payload: { path, maxDistance },
+export const dropShipsState = (): ShipsAction => ({
+  type: 'DropShipsState',
 });
 
-export const enableAudio = (): AudioAction => ({
-  type: 'EnableAudio',
+export const markMyField = (
+  positionInfo: number,
+  mode: GameMode,
+  selectedEnemyPosition: number | undefined,
+): ShipsAction => ({
+  type: 'MarkMyField',
+  payload: { positionInfo, mode, selectedEnemyPosition },
 });
 
 export const togleBattlefield = (): AppAction => ({
@@ -80,13 +84,14 @@ export const setEnemyBattlefield = (battlefield: number[]): AppAction => ({
   payload: battlefield,
 });
 
-export const setSelectedEnemyPosition = (position: number): AppAction => ({
+export const setSelectedEnemyPosition = (position: number | undefined): AppAction => ({
   type: 'SetSelectedEnemyPosition',
   payload: position,
 });
 
-export const shoot = (): AppAction => ({
-  type: 'Shoot',
+export const markEnemyField = (positionInfo: number): AppAction => ({
+  type: 'MarkEnemyField',
+  payload: positionInfo,
 });
 
 export const setEnemyPlanes = (planes: Mesh[]): AppAction => ({
@@ -97,4 +102,24 @@ export const setEnemyPlanes = (planes: Mesh[]): AppAction => ({
 export const setGameCode = (code: string): AppAction => ({
   type: 'SetGameCode',
   payload: code,
+});
+
+export const setIsLoading = (isLoading: boolean): AppAction => ({
+  type: 'SetIsLoading',
+  payload: isLoading,
+});
+
+export const setAppError = (error: string): AppAction => ({
+  type: 'SetAppError',
+  payload: error,
+});
+
+export const startGame = (turn: Turn): AppAction => ({
+  type: 'StartGame',
+  payload: turn,
+});
+
+export const setTurn = (turn: Turn): AppAction => ({
+  type: 'SetTurn',
+  payload: turn,
 });

@@ -1,9 +1,12 @@
 import { useEffect } from 'react';
+import { GiStrikingArrows } from 'react-icons/gi';
+import { FaRandom } from 'react-icons/fa';
+import { ImCross } from 'react-icons/im';
 import Initial3DScene from './3D/Initial3DScene';
 import InitialARScene from './AR/InitialARScene';
 import { useAppDispatch, useAppSelector } from './hooks/reduxHooks';
 import {} from './other/battleMapConfigs';
-import { arrangeRandomly, setGameMode, shoot } from './redux/actions';
+import { arrangeRandomly, setGameMode } from './redux/actions';
 import gameService from './services/gameService';
 import './styles/ui.css';
 
@@ -22,7 +25,11 @@ const App = () => {
 
   const set3DGameMode = () => dispatch(setGameMode('3D'));
 
-  const onConfirmButtonClick = () => gameService.sendArrangedShips();
+  const confirmArranging = () => gameService.sendArrangedShips();
+
+  const unconfirmArranging = () => gameService.sendArrangedShips(true);
+
+  const randomlyArrangeShips = () => dispatch(arrangeRandomly());
 
   const scene = gameMode === '3D' ? <Initial3DScene /> : <InitialARScene />;
 
@@ -30,36 +37,51 @@ const App = () => {
 
   const gameModeButtonText = gameMode === '3D' ? 'AR' : '3D';
 
-  const randomlyArrangeShips = () => dispatch(arrangeRandomly());
-
   const isArranging = gameState === 'Arranging';
 
-  const confirmButtonText = isArranging ? 'Confirm' : 'Fire!';
+  const isInGame = gameState === 'InGame';
 
-  const shootEnemy = () => dispatch(shoot());
+  const confirmButtonText = isArranging ? (
+    '✓'
+  ) : gameState === 'ConfirmedArranging' ? (
+    <ImCross />
+  ) : (
+    <GiStrikingArrows />
+  );
 
-  const confirmButtonHandler = isArranging ? onConfirmButtonClick : shootEnemy;
+  const shootEnemy = () => {
+    if (selectedEnemyPosition === undefined) {
+      return;
+    }
+    gameService.shootEnemy(selectedEnemyPosition);
+  };
 
-  const confirmButtonVisibility = isArranging
-    ? isAllShipsPlaced
-    : selectedEnemyPosition !== undefined;
+  const confirmButtonHandler = isArranging
+    ? confirmArranging
+    : gameState === 'ConfirmedArranging'
+    ? unconfirmArranging
+    : shootEnemy;
+
+  const confirmButtonVisibility =
+    isArranging || gameState === 'ConfirmedArranging'
+      ? isAllShipsPlaced
+      : selectedEnemyPosition !== undefined;
 
   const turnText = turn === 'You' ? 'Your turn' : "Enemy's turn";
 
   useEffect(() => {
     return () => {
-      console.log('disconnect');
       gameService.disconnect();
     };
   }, []);
 
-  if (gameState !== 'InGame' && !isArranging) {
+  if (!isInGame && !(isArranging || gameState === 'ConfirmedArranging')) {
     return scene;
   }
 
   return (
     <>
-      {gameState === 'InGame' && <p className="turn">{turnText}</p>}
+      {isInGame && <p className="turn">{turnText}</p>}
       {confirmButtonVisibility && (
         <button className="confirm-button" onClick={confirmButtonHandler}>
           {confirmButtonText}
@@ -67,7 +89,7 @@ const App = () => {
       )}
       {isArranging && (
         <button className="top-left-button" onClick={randomlyArrangeShips}>
-          Arrange
+          <FaRandom />
         </button>
       )}
       <button className="top-right-button" onClick={gameModeSetter}>

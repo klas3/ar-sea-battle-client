@@ -4,7 +4,7 @@ button {
   margin: 1em;
   z-index: 1;
   background-color: #4d5f87;
-  font-size: 1.2vw;
+  font-size: 1.3vw;
   padding-left: 1em;
   padding-right: 1em;
   padding-top: 0.4em;
@@ -51,7 +51,7 @@ input::placeholder {
   top: 50%;
   left: 50%;
   width: 15em;
-  font-size: 1.7vw;
+  font-size: calc((2.4vw + 2.4vh) / 2);
   margin: 0;
   transform: translate(-50%, -50%);
 }
@@ -60,7 +60,7 @@ input::placeholder {
   top: 60%;
   left: 50%;
   width: 15em;
-  font-size: 1.7vw;
+  font-size: calc((2.4vw + 2.4vh) / 2);
   margin: 0;
   transform: translate(-50%, -50%);
 }
@@ -71,8 +71,8 @@ input::placeholder {
   z-index: 1;
   width: 100%;
   top: 25%;
-  left: 50%;
-  font-size: 7vw;
+  left: 50.3%;
+  font-size: calc((8.5vw + 8.5vh) / 2);
   transform: translate(-50%, -50%);
   text-align: center;
   color: #3b555cb6;
@@ -91,74 +91,31 @@ input::placeholder {
   color: #3b555c;
 }
 
-@media all and (min-width: 1360px) {
-  .first-menu-item,
-  .second-menu-item {
-    font-size: 1.6vw;
-  }
-
-  .title {
-    font-size: 7vw;
-  }
+.left-half-button {
+  top: 60%;
+  left: 42%;
+  width: 7em;
+  margin: 0;
+  font-size: calc((2.2vw + 2.2vh) / 2);
+  transform: translate(-50%, -50%);
 }
 
-@media all and (max-width: 1359px) and (min-width: 959px) {
-  .first-menu-item,
-  .second-menu-item {
-    font-size: 2.2vw;
-  }
-
-  button {
-    font-size: 1.5vw;
-  }
-
-  .title {
-    font-size: 9vw;
-  }
+.right-half-button {
+  top: 60%;
+  left: 58%;
+  width: 7em;
+  margin: 0;
+  font-size: calc((2.2vw + 2.2vh) / 2);
+  transform: translate(-50%, -50%);
 }
 
-@media all and (max-width: 959px) and (min-width: 600px) {
-  .first-menu-item,
-  .second-menu-item {
-    font-size: 2.5vw;
-  }
-
-  button {
-    font-size: 2vw;
-  }
-
-  .title {
-    font-size: 12vw;
-  }
-}
-
-@media all and (max-width: 599px) and (min-width: 50px) {
-  .first-menu-item,
-  .second-menu-item {
-    font-size: 4vw;
-  }
-
-  button {
-    font-size: 3vw;
-  }
-
-  .title {
-    font-size: 16vw;
-  }
-}
-
-@media all and (max-height: 399px) and (min-height: 50px) {
-  .first-menu-item {
-    font-size: 4vh;
-    top: 55%;
-  }
-
-  .second-menu-item {
-    font-size: 4vh;
-    top: 68%;
-  }
-
-  .title {
-    font-size: 16vh;
-  }
+.error-title {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  transform: translate(-50%, -50%);
+  color: rgb(177, 25, 25);
+  top: 64%;
+  left: 50%;
+  font-size: calc((1.8vw + 1.8vh) / 2);
 }

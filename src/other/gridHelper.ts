@@ -19,7 +19,7 @@ class GridCreator {
   public createPlanes = (
     material?: THREE.MeshBasicMaterialParameters,
     additionalX: number = 0,
-    additionalY: number = 0,
+    additionalY: number = 1,
     additionalZ: number = 0,
   ) => {
     const geometrySize = gridSize / battlefieldSize;

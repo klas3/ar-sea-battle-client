@@ -29,6 +29,8 @@ export type ShipSize = 'small' | 'medium' | 'large' | 'largest';
 
 export type GameMode = '3D' | 'AR';
 
+export type Turn = 'You' | 'Enemy';
+
 export interface RandomArrangingPosition {
   value: number;
   index: number;

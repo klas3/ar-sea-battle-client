@@ -22,11 +22,14 @@ import {
 const Initial3DScene = () => {
   const gameState = useAppSelector((state) => state.game.state);
 
-  const isPlaying = gameState === 'Arranging' || gameState === 'InGame';
+  const isPlaying =
+    gameState === 'Arranging' || gameState === 'InGame' || gameState === 'ConfirmedArranging';
 
   const isInGame = gameState === 'InGame';
 
-  const cameraConfig = gameState === 'InMainMenu' ? mainMenuCameraConfig : battleCameraConfig;
+  const disableArranging = isInGame || gameState === 'ConfirmedArranging';
+
+  const cameraConfig = !isPlaying ? mainMenuCameraConfig : battleCameraConfig;
 
   const composer = useCallback((composerRef) => {
     if (composerRef) {
@@ -50,7 +53,7 @@ const Initial3DScene = () => {
         <Provider store={store}>
           <CameraController enabled={isPlaying} reference={gameService.setCamera} />
           <BattleMap />
-          {isPlaying && <Friendly3DBattlefield arranging={!isInGame} />}
+          {isPlaying && <Friendly3DBattlefield arranging={!disableArranging} />}
           {isInGame && (
             <Enemy3DBattlefield
               additionalX={enemyBattlefieldAdditionalX}

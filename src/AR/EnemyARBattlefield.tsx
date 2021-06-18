@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { arEnemyBattlefieldPlaneColor } from '../other/battleMapConfigs';
-import { arCoordsСoefficient, battlefieldSize } from '../other/constants';
+import { arCoordsСoefficient } from '../other/constants';
 import gridCreator from '../other/gridHelper';
 import { setSelectedEnemyPosition } from '../redux/actions';
 import store from '../redux/store';
@@ -16,12 +16,13 @@ const EnemyARBattlefield = () => {
   const renderedPlanes = planes.map((plane) => {
     const { index } = plane.userData;
     const { x, z } = plane.position;
+    const id = `arPlane${index}`;
     const position = `${x / arCoordsСoefficient} ${0} ${z / arCoordsСoefficient}`;
     const material = `transparent: true; opacity: 0.5; color: ${arEnemyBattlefieldPlaneColor};`;
     return (
       // @ts-ignore
       <a-box
-        id={index}
+        id={id}
         material={material}
         key={index}
         position={position}
@@ -56,16 +57,14 @@ const EnemyARBattlefield = () => {
           if (turn !== 'You') {
             return;
           }
-          for (let i = 0; i < battlefieldSize ** 2; i += 1) {
-            document
-              .getElementById(i.toString())
-              ?.setAttribute('material', `color: ${arEnemyBattlefieldPlaneColor};`);
-          }
-          this.el.setAttribute('material', 'color: red;');
           const parsedIndex = Number.parseInt(this.el.id);
           if (Number.isNaN(parsedIndex)) {
             return;
           }
+          document
+            .getElementById(`arPlane${parsedIndex}`)
+            ?.setAttribute('material', `color: ${arEnemyBattlefieldPlaneColor};`);
+          this.el.setAttribute('material', 'color: red;');
           dispatch(setSelectedEnemyPosition(parsedIndex));
         });
       },

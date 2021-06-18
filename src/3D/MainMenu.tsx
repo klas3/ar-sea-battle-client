@@ -1,26 +1,53 @@
-import { ChangeEvent } from 'react';
+import { useEffect, ChangeEvent } from 'react';
+import { MdKeyboardBackspace } from 'react-icons/md';
+import Url from 'url-parse';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import { copyElementTextToClipboard } from '../other/helpers';
-import { setGameCode, setGameState } from '../redux/actions';
+import { copyTextToClipboard } from '../other/helpers';
+import {
+  emptyShipsModels,
+  setAppError,
+  setGameCode,
+  setGameState,
+  setIsLoading,
+} from '../redux/actions';
 import gameService from '../services/gameService';
 
 const MainMenu = () => {
   const gameState = useAppSelector((state) => state.game.state);
   const gameCode = useAppSelector((state) => state.game.gameCode);
+  const isLoading = useAppSelector((state) => state.game.isLoading);
+  const appError = useAppSelector((state) => state.game.appError);
   const dispatch = useAppDispatch();
 
+  const title =
+    gameState === 'WinnerScreen'
+      ? 'You won!'
+      : gameState === 'LooserScreen'
+      ? 'You lose!'
+      : 'Sea Battle';
+
   const onCreateButtonClick = async () => {
+    dispatch(setIsLoading(true));
     await gameService.createGame();
+    dispatch(setIsLoading(false));
     dispatch(setGameState('CreatingRoom'));
   };
 
-  const onJoinGameButtonClick = () => dispatch(setGameState('JoiningRoom'));
+  const onJoinGameButtonClick = () => {
+    dispatch(setGameCode(''));
+    dispatch(setGameState('JoiningRoom'));
+  };
 
   const onJoinButtonClick = async () => gameService.joinGame(gameCode);
 
   const onBackButtonClick = () => dispatch(setGameState('InMainMenu'));
 
-  const onCopyButtonClick = () => copyElementTextToClipboard('gameCode');
+  const onCopyButtonClick = () => copyTextToClipboard(gameCode);
+
+  const onCopyLinkButtonClick = () => {
+    const { protocol, hostname, port } = new Url(document.URL);
+    copyTextToClipboard(`${protocol}//${hostname}${port ? `:${port}` : ''}/${gameCode}`);
+  };
 
   const onGameCodeTextChange = (event: ChangeEvent<HTMLInputElement>) =>
     dispatch(setGameCode(event.target.value));
@@ -38,9 +65,12 @@ const MainMenu = () => {
 
   const createGame = gameState === 'CreatingRoom' && (
     <>
-      <input id="gameCode" value={gameCode} className="first-menu-item" disabled />
-      <button className="second-menu-item" onClick={onCopyButtonClick}>
+      <input value={`Your room code: ${gameCode}`} className="first-menu-item" disabled />
+      <button className="left-half-button" onClick={onCopyButtonClick}>
         Copy
+      </button>
+      <button className="right-half-button" onClick={onCopyLinkButtonClick}>
+        Copy link
       </button>
     </>
   );
@@ -50,6 +80,7 @@ const MainMenu = () => {
       <input
         onChange={onGameCodeTextChange}
         value={gameCode}
+        autoComplete="off"
         id="gameCodeInput"
         placeholder="Room code"
         className="first-menu-item"
@@ -57,18 +88,37 @@ const MainMenu = () => {
       <button className="second-menu-item" onClick={onJoinButtonClick}>
         Join
       </button>
+      <p className="error-title">{appError}</p>
     </>
   );
 
-  const backButton = gameState !== 'InMainMenu' && (
+  const backButton = (gameState === 'CreatingRoom' || gameState === 'JoiningRoom') && (
     <button className="random-arranging-button" onClick={onBackButtonClick}>
-      ᐸ
+      <MdKeyboardBackspace />
     </button>
   );
 
+  const mainMenuButton = (gameState === 'WinnerScreen' || gameState === 'LooserScreen') && (
+    <button className="first-menu-item" onClick={onBackButtonClick}>
+      To main menu
+    </button>
+  );
+
+  useEffect(() => {
+    return () => {
+      dispatch(emptyShipsModels());
+      dispatch(setAppError(''));
+    };
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <p className="title">Loading</p>;
+  }
+
   return (
     <>
-      <p className="title">Sea Battle</p>
+      <p className="title">{title}</p>
+      {mainMenuButton}
       {mainMenu}
       {createGame}
       {joinGame}

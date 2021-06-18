@@ -5,14 +5,14 @@ import { setEnemyPlanes, togleBattlefield } from '../redux/actions';
 import FriendlyARBattlefield from './FriendlyARBattlefield';
 
 const InitialARScene = () => {
-  const battlefieldType = useAppSelector((state) => state.game.battlefield);
+  const battlefieldType = useAppSelector((state) => state.game.selectedARBattlefield);
   const gameState = useAppSelector((state) => state.game.state);
 
   const dispatch = useAppDispatch();
 
   const scene = useRef<Element | null>();
 
-  const changeBattlefieldText = battlefieldType === 'friendly' ? 'Enemy' : 'You';
+  const changeBattlefieldText = battlefieldType === 'friendly' ? 'Enemy' : 'Me';
 
   const battlefield =
     battlefieldType === 'friendly' ? <FriendlyARBattlefield /> : <EnemyARBattlefield />;

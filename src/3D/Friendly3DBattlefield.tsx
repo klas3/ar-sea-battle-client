@@ -49,6 +49,7 @@ const Friendly3DBattlefield = (props: IProps) => {
   const { scene, camera, gl: renderer } = useThree();
 
   const addGridInteraction = () => {
+    planes.forEach((plane) => scene.remove(plane));
     const createdPlanes = gridCreator.createPlanes(
       arrangementPlaneMaterial,
       additionalX,
@@ -57,14 +58,13 @@ const Friendly3DBattlefield = (props: IProps) => {
     );
     scene.remove(scene.getObjectByName(friendlyBattlefieldGridName) as Object3D);
     createdPlanes.forEach((plane) => scene.add(plane));
-    scene.add(
-      gridCreator.createGrid(
-        additionalX,
-        planeDefaultHeight,
-        additionalZ,
-        friendlyBattlefieldGridName,
-      ),
+    const grid = gridCreator.createGrid(
+      additionalX,
+      planeDefaultHeight,
+      additionalZ,
+      friendlyBattlefieldGridName,
     );
+    scene.add(grid);
     dispatch(setPlanes(createdPlanes));
     return () => {
       planes.forEach((plane) => scene.remove(plane));

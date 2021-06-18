@@ -19,6 +19,7 @@ const Enemy3DBattlefield = (props: IProps) => {
   const enemyBattlefield = useAppSelector((state) => state.game.enemyBattlefield);
   const turn = useAppSelector((state) => state.game.turn);
   const planes = useAppSelector((state) => state.game.enemyPlanes);
+  const gameState = useAppSelector((state) => state.game.state);
 
   const dispatch = useAppDispatch();
 
@@ -101,18 +102,6 @@ const Enemy3DBattlefield = (props: IProps) => {
   );
 
   const addGridInteraction = () => {
-    if (!planes.length) {
-      const createdPlanes = gridCreator.createPlanes(
-        battlePlaneMaterial,
-        additionalX,
-        planeDefaultHeight,
-        additionalZ,
-      );
-      createdPlanes.forEach((plane) => scene.add(plane));
-      scene.add(grid);
-      dispatch(setEnemyPlanes(createdPlanes));
-    }
-
     document.addEventListener('click', markCellOnClick);
     document.addEventListener('touchstart', markCellOnTouch);
     document.addEventListener('mousemove', onDocumentMouseMove);
@@ -124,17 +113,19 @@ const Enemy3DBattlefield = (props: IProps) => {
     };
   };
 
-  useEffect(addGridInteraction, [
-    additionalX,
-    additionalZ,
-    scene,
-    markCellOnClick,
-    markCellOnTouch,
-    grid,
-    planes,
-    dispatch,
-    onDocumentMouseMove,
-  ]);
+  useEffect(addGridInteraction, [markCellOnClick, markCellOnTouch, onDocumentMouseMove]);
+
+  if (!planes.length && gameState === 'InGame') {
+    const createdPlanes = gridCreator.createPlanes(
+      battlePlaneMaterial,
+      additionalX,
+      planeDefaultHeight,
+      additionalZ,
+    );
+    createdPlanes.forEach((plane) => scene.add(plane));
+    scene.add(grid);
+    dispatch(setEnemyPlanes(createdPlanes));
+  }
 
   return null;
 };

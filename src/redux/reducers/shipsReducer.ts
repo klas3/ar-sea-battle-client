@@ -1,4 +1,10 @@
 import {
+  crossMaterial,
+  crossTextureFilePath,
+  emptyPositionColor,
+  emptyPositiondMaterial,
+} from '../../other/battleMapConfigs';
+import {
   emptyZoneMark,
   shipMaxRotation,
   shipRotationStep,
@@ -8,6 +14,8 @@ import { convertToRadians, getDefaultPositions, getSegmentMidpoint } from '../..
 import { arrangeShipsRandomly } from '../../other/shipsArranging';
 import getDefaultShipsConfigs from '../../other/shipsConfigs';
 import { ShipsState } from '../../other/types';
+import { setSelectedEnemyPosition } from '../actions';
+import store from '../store';
 import { ShipsAction } from '../types';
 
 const defaultState: ShipsState = {
@@ -142,6 +150,40 @@ const shipsConfigsReducer = (state = defaultState, action: ShipsAction): ShipsSt
       state.positions[index] = position;
     });
     return { ...state, configs };
+  }
+
+  if (action.type === 'DropShipsState') {
+    state = {
+      ...state,
+      configs: getDefaultShipsConfigs(),
+      positions: getDefaultPositions(),
+      models3D: [],
+      planes: [],
+      friendlyAdditionalX: 0,
+      friendlyAdditionalZ: 0,
+    };
+  }
+
+  if (action.type === 'MarkMyField') {
+    const { mode, selectedEnemyPosition, positionInfo } = action.payload;
+    if (selectedEnemyPosition === undefined) {
+      return state;
+    }
+    if (mode === '3D') {
+      state.planes[selectedEnemyPosition].material =
+        positionInfo === -1 ? emptyPositiondMaterial : crossMaterial;
+    } else {
+      const arPlane = document.getElementById(`arPlane${selectedEnemyPosition}`);
+      if (!arPlane) {
+        return state;
+      }
+      if (positionInfo === -1) {
+        arPlane.setAttribute('material', emptyPositionColor);
+      } else {
+        arPlane.setAttribute('src', crossTextureFilePath);
+      }
+    }
+    store.dispatch(setSelectedEnemyPosition(undefined));
   }
 
   return state;

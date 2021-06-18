@@ -34,4 +34,4 @@ export const mainMenuCameraConfig = { position: new Vector3(300, 20, -105), far:
 
 export const battleCameraConfig = { position: new Vector3(0, 175, 5), far: 20000 };
 
-export const serverUrl = 'https://08f756a57ebf.ngrok.io';
+export const serverUrl = 'http://localhost:3001';
