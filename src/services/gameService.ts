@@ -112,7 +112,7 @@ class GameService {
       const response = await this.axios.post(endpoint, data);
       return { data: response.data };
     } catch (error) {
-      const errorMessage = error.response.data.message || error.response.data;
+      const errorMessage = error.response && (error.response.data.message || error.response.data);
       return { error: errorMessage };
     }
   };
