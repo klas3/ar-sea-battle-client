@@ -1,7 +1,13 @@
 import { useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import { arEnemyBattlefieldPlaneColor } from '../other/battleMapConfigs';
-import { arCoordsСoefficient } from '../other/constants';
+import {
+  arEnemyBattlefieldPlaneColor,
+  arMarkedEnemyPlaneMaterial,
+  arEnemyPlaneMaterial,
+  crossTextureFilePath,
+  dotTextureFilePath,
+} from '../other/battleMapConfigs';
+import { arCoordsСoefficient, enemyArPlaneIdName } from '../other/constants';
 import gridCreator from '../other/gridHelper';
 import { setSelectedEnemyPosition } from '../redux/actions';
 import store from '../redux/store';
@@ -9,16 +15,25 @@ import store from '../redux/store';
 const EnemyARBattlefield = () => {
   // TODO: test
   useAppSelector((state) => state.game.turn);
+  const enemyPositions = useAppSelector((state) => state.game.enemyBattlefield);
   const dispatch = useAppDispatch();
 
   const planes = useMemo(() => gridCreator.createPlanes(), []);
 
-  const renderedPlanes = planes.map((plane) => {
+  const renderedPlanes = planes.map((plane, planeIndex) => {
+    const enemyPosition = enemyPositions[planeIndex];
     const { index } = plane.userData;
     const { x, z } = plane.position;
-    const id = `arPlane${index}`;
+    const id = `${enemyArPlaneIdName}${index}`;
     const position = `${x / arCoordsСoefficient} ${0} ${z / arCoordsСoefficient}`;
-    const material = `transparent: true; opacity: 0.5; color: ${arEnemyBattlefieldPlaneColor};`;
+    const material =
+      enemyPosition === undefined ? arEnemyPlaneMaterial : arMarkedEnemyPlaneMaterial;
+    const texture =
+      enemyPosition === undefined
+        ? ''
+        : enemyPosition === -1
+        ? dotTextureFilePath
+        : crossTextureFilePath;
     return (
       // @ts-ignore
       <a-box
@@ -26,6 +41,7 @@ const EnemyARBattlefield = () => {
         material={material}
         key={index}
         position={position}
+        src={texture}
         depth="0.2"
         height="0.01"
         width="0.2"
@@ -53,17 +69,24 @@ const EnemyARBattlefield = () => {
     AFRAME.registerComponent('clickhandler', {
       init: function () {
         this.el.addEventListener('click', () => {
-          const turn = store.getState().game.turn;
+          const { turn, enemyBattlefield } = store.getState().game;
           if (turn !== 'You') {
             return;
           }
-          const parsedIndex = Number.parseInt(this.el.id);
-          if (Number.isNaN(parsedIndex)) {
+          const parsedIndex = Number.parseInt(this.el.id.slice(enemyArPlaneIdName.length));
+          if (Number.isNaN(parsedIndex) || enemyBattlefield[parsedIndex] !== undefined) {
             return;
           }
           document
-            .getElementById(`arPlane${parsedIndex}`)
+            .getElementById(`${enemyArPlaneIdName}${parsedIndex}`)
             ?.setAttribute('material', `color: ${arEnemyBattlefieldPlaneColor};`);
+          enemyBattlefield.forEach((position, index) => {
+            if (position === undefined) {
+              document
+                .getElementById(`${enemyArPlaneIdName}${index}`)
+                ?.setAttribute('material', arEnemyPlaneMaterial);
+            }
+          });
           this.el.setAttribute('material', 'color: red;');
           dispatch(setSelectedEnemyPosition(parsedIndex));
         });

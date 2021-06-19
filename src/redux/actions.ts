@@ -64,10 +64,10 @@ export const dropShipsState = (): ShipsAction => ({
 export const markMyField = (
   positionInfo: number,
   mode: GameMode,
-  selectedEnemyPosition: number | undefined,
+  selectedPosition: number,
 ): ShipsAction => ({
   type: 'MarkMyField',
-  payload: { positionInfo, mode, selectedEnemyPosition },
+  payload: { positionInfo, mode, selectedPosition },
 });
 
 export const togleBattlefield = (): AppAction => ({

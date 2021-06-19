@@ -1,11 +1,12 @@
 import { AppAction, AppState } from '../types';
-import { getEnemyDefaultPositions } from '../../other/helpers';
+import { getBattlefieldDefaultPositions } from '../../other/helpers';
 import {
   crossMaterial,
   crossTextureFilePath,
-  emptyPositionColor,
+  dotTextureFilePath,
   emptyPositiondMaterial,
 } from '../../other/battleMapConfigs';
+import { enemyArPlaneIdName } from '../../other/constants';
 
 const hasGameCode = !window.location.pathname.replace('/', '');
 
@@ -13,7 +14,7 @@ const getDefaultState = (): AppState => ({
   mode: '3D',
   selectedARBattlefield: 'friendly',
   state: hasGameCode ? 'InMainMenu' : 'JoiningRoom',
-  enemyBattlefield: getEnemyDefaultPositions(),
+  enemyBattlefield: getBattlefieldDefaultPositions(),
   selectedEnemyPosition: undefined,
   turn: 'You',
   enemyPlanes: [],
@@ -50,18 +51,17 @@ const gameReducer = (state = defaultState, action: AppAction): AppState => {
   }
 
   if (action.type === 'MarkEnemyField' && state.selectedEnemyPosition !== undefined) {
+    state.enemyBattlefield[state.selectedEnemyPosition] = action.payload;
     if (state.mode === '3D') {
       state.enemyPlanes[state.selectedEnemyPosition].material =
         action.payload === -1 ? emptyPositiondMaterial : crossMaterial;
     } else {
-      const arPlane = document.getElementById(`arPlane${state.selectedEnemyPosition}`);
-      if (!arPlane) {
-        return state;
-      }
-      if (action.payload === -1) {
-        arPlane.setAttribute('material', emptyPositionColor);
-      } else {
-        arPlane.setAttribute('src', crossTextureFilePath);
+      const arPlane = document.getElementById(
+        `${enemyArPlaneIdName}${state.selectedEnemyPosition}`,
+      );
+      if (arPlane) {
+        const planeTexture = action.payload === -1 ? dotTextureFilePath : crossTextureFilePath;
+        arPlane.setAttribute('src', planeTexture);
       }
     }
     state.selectedEnemyPosition = undefined;

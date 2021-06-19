@@ -90,8 +90,8 @@ class GameService {
   };
 
   public onNextMove = (info: { position: number; positionInfo: number }) => {
-    const { positionInfo } = info;
-    const { turn, mode, selectedEnemyPosition } = store.getState().game;
+    const { position, positionInfo } = info;
+    const { turn, mode } = store.getState().game;
     if (turn === 'You') {
       store.dispatch(markEnemyField(positionInfo));
       if (positionInfo === -1) {
@@ -99,7 +99,7 @@ class GameService {
       }
       return;
     }
-    store.dispatch(markMyField(positionInfo, mode, selectedEnemyPosition));
+    store.dispatch(markMyField(positionInfo, mode, position));
     if (positionInfo === -1) {
       store.dispatch(setTurn('You'));
     }
@@ -129,6 +129,7 @@ class GameService {
 
   private onVicktory = () => {
     store.dispatch(dropShipsState());
+    console.log('onVicktory');
     store.dispatch(setGameState('WinnerScreen'));
   };
 

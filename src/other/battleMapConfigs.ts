@@ -1,4 +1,4 @@
-import { DoubleSide, MeshBasicMaterial, MeshLambertMaterial, RepeatWrapping, Vector3 } from 'three';
+import { MeshBasicMaterial, MeshLambertMaterial, RepeatWrapping, Vector3 } from 'three';
 import { textureLoader } from './tools';
 
 const waterTextureFilePath = 'textures/waternormals.jpg';
@@ -6,6 +6,8 @@ const waterTextureFilePath = 'textures/waternormals.jpg';
 const cloudTextureFilePath = 'textures/cloud.png';
 
 export const crossTextureFilePath = 'textures/cross.png';
+
+export const dotTextureFilePath = 'textures/dot.png';
 
 export const emptyPositionColor = '#ff4f4f';
 
@@ -42,8 +44,8 @@ export const crossMaterial = new MeshBasicMaterial({
 });
 
 export const emptyPositiondMaterial = new MeshBasicMaterial({
-  color: emptyPositionColor,
-  side: DoubleSide,
+  map: textureLoader.load(dotTextureFilePath),
+  transparent: true,
 });
 
 export const friendlyBattlefieldAdditionalX = 110;
@@ -59,3 +61,9 @@ export const friendlyBattlefieldGridName = 'friendlyGrid';
 export const enemyBattlefieldGridName = 'enemyGrid';
 
 export const arEnemyBattlefieldPlaneColor = '#366191';
+
+export const arEnemyPlaneMaterial = `transparent: true; opacity: 0.5; color: ${arEnemyBattlefieldPlaneColor};`;
+
+export const arMarkedEnemyPlaneMaterial = `transparent: true; opacity: 0.5;`;
+
+export const arMarkedFriendlyPlaneMaterial = `transparent: true; opacity: 0.5;`;

@@ -36,7 +36,7 @@ const InitialARScene = () => {
 
   return (
     <>
-      {gameState !== 'Arranging' && (
+      {gameState !== 'Arranging' && gameState !== 'ConfirmedArranging' && (
         <button className="change-battlefield-button" onClick={onBattlefieldButtonClick}>
           {changeBattlefieldText}
         </button>

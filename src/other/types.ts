@@ -21,6 +21,7 @@ export interface ShipsState {
   models3D: Object3D[];
   positions: number[];
   planes: THREE.Mesh[];
+  friendlyBattlefield: number[];
   friendlyAdditionalX: number;
   friendlyAdditionalZ: number;
 }

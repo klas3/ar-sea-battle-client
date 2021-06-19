@@ -22,7 +22,12 @@ import {
 import gridCreator from '../other/gridHelper';
 import gameService from '../services/gameService';
 import getDefaultShipsConfigs from '../other/shipsConfigs';
-import { convertToRadians, getDraggableLimit, getSegmentMidpoint } from '../other/helpers';
+import {
+  convertToRadians,
+  getDraggableLimit,
+  getSegmentMidpoint,
+  markTouched3DPlanes,
+} from '../other/helpers';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { isPositionAvailable } from '../other/shipsArranging';
 import { diractionalRay, raycaster } from '../other/tools';
@@ -39,6 +44,7 @@ const Friendly3DBattlefield = (props: IProps) => {
   const models3D = useAppSelector((state) => state.ships.models3D);
   const planes = useAppSelector((state) => state.ships.planes);
   const positions = useAppSelector((state) => state.ships.positions);
+  const friendlyBattlefield = useAppSelector((state) => state.ships.friendlyBattlefield);
   const additionalX = useAppSelector((state) => state.ships.friendlyAdditionalX);
   const additionalZ = useAppSelector((state) => state.ships.friendlyAdditionalZ);
 
@@ -57,7 +63,8 @@ const Friendly3DBattlefield = (props: IProps) => {
       additionalZ,
     );
     scene.remove(scene.getObjectByName(friendlyBattlefieldGridName) as Object3D);
-    createdPlanes.forEach((plane) => scene.add(plane));
+    const markedPlanes = markTouched3DPlanes(createdPlanes, friendlyBattlefield);
+    markedPlanes.forEach((plane) => scene.add(plane));
     const grid = gridCreator.createGrid(
       additionalX,
       planeDefaultHeight,
@@ -65,7 +72,7 @@ const Friendly3DBattlefield = (props: IProps) => {
       friendlyBattlefieldGridName,
     );
     scene.add(grid);
-    dispatch(setPlanes(createdPlanes));
+    dispatch(setPlanes(markedPlanes));
     return () => {
       planes.forEach((plane) => scene.remove(plane));
       models3D.forEach((ship) => scene.remove(ship));

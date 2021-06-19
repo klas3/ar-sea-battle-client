@@ -1,31 +1,38 @@
 import {
   crossMaterial,
   crossTextureFilePath,
-  emptyPositionColor,
+  dotTextureFilePath,
   emptyPositiondMaterial,
 } from '../../other/battleMapConfigs';
 import {
+  friendlyArPlaneIdName,
   emptyZoneMark,
   shipMaxRotation,
   shipRotationStep,
   shipsRotationStep,
 } from '../../other/constants';
-import { convertToRadians, getDefaultPositions, getSegmentMidpoint } from '../../other/helpers';
+import {
+  convertToRadians,
+  getBattlefieldDefaultPositions,
+  getDefaultPositions,
+  getSegmentMidpoint,
+} from '../../other/helpers';
 import { arrangeShipsRandomly } from '../../other/shipsArranging';
 import getDefaultShipsConfigs from '../../other/shipsConfigs';
 import { ShipsState } from '../../other/types';
-import { setSelectedEnemyPosition } from '../actions';
-import store from '../store';
 import { ShipsAction } from '../types';
 
-const defaultState: ShipsState = {
+const getDefaultState = (): ShipsState => ({
   configs: getDefaultShipsConfigs(),
   positions: getDefaultPositions(),
   models3D: [],
   planes: [],
+  friendlyBattlefield: getBattlefieldDefaultPositions(),
   friendlyAdditionalX: 0,
   friendlyAdditionalZ: 0,
-};
+});
+
+const defaultState = getDefaultState();
 
 const shipsConfigsReducer = (state = defaultState, action: ShipsAction): ShipsState => {
   if (action.type === 'RotateShip' && action.payload) {
@@ -153,37 +160,23 @@ const shipsConfigsReducer = (state = defaultState, action: ShipsAction): ShipsSt
   }
 
   if (action.type === 'DropShipsState') {
-    state = {
-      ...state,
-      configs: getDefaultShipsConfigs(),
-      positions: getDefaultPositions(),
-      models3D: [],
-      planes: [],
-      friendlyAdditionalX: 0,
-      friendlyAdditionalZ: 0,
-    };
+    state = getDefaultState();
   }
 
   if (action.type === 'MarkMyField') {
-    const { mode, selectedEnemyPosition, positionInfo } = action.payload;
-    if (selectedEnemyPosition === undefined) {
-      return state;
-    }
+    const { mode, selectedPosition, positionInfo } = action.payload;
+    state.friendlyBattlefield[selectedPosition] = positionInfo;
     if (mode === '3D') {
-      state.planes[selectedEnemyPosition].material =
+      state.planes[selectedPosition].material =
         positionInfo === -1 ? emptyPositiondMaterial : crossMaterial;
     } else {
-      const arPlane = document.getElementById(`arPlane${selectedEnemyPosition}`);
+      const arPlane = document.getElementById(`${friendlyArPlaneIdName}${selectedPosition}`);
       if (!arPlane) {
         return state;
       }
-      if (positionInfo === -1) {
-        arPlane.setAttribute('material', emptyPositionColor);
-      } else {
-        arPlane.setAttribute('src', crossTextureFilePath);
-      }
+      const planeTexture = action.payload === -1 ? dotTextureFilePath : crossTextureFilePath;
+      arPlane.setAttribute('src', planeTexture);
     }
-    store.dispatch(setSelectedEnemyPosition(undefined));
   }
 
   return state;

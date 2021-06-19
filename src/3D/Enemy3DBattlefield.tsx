@@ -7,6 +7,7 @@ import { mouse, raycaster } from '../other/tools';
 import { enemyBattlefieldGridName } from '../other/battleMapConfigs';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { setEnemyPlanes, setSelectedEnemyPosition } from '../redux/actions';
+import { markTouched3DPlanes } from '../other/helpers';
 
 interface IProps {
   additionalX?: number;
@@ -52,7 +53,11 @@ const Enemy3DBattlefield = (props: IProps) => {
       if (enemyBattlefield[selectedIndex] !== undefined) {
         return;
       }
-      planes.forEach((plane) => ((plane.material as MeshBasicMaterial).visible = false));
+      enemyBattlefield.forEach((position, index) => {
+        if (position === undefined) {
+          (planes[index].material as MeshBasicMaterial).visible = false;
+        }
+      });
       const material = planes[selectedIndex].material as MeshBasicMaterial;
       material.visible = true;
       dispatch(setSelectedEnemyPosition(selectedIndex));
@@ -122,9 +127,10 @@ const Enemy3DBattlefield = (props: IProps) => {
       planeDefaultHeight,
       additionalZ,
     );
-    createdPlanes.forEach((plane) => scene.add(plane));
+    const markedPlanes = markTouched3DPlanes(createdPlanes, enemyBattlefield);
+    markedPlanes.forEach((plane) => scene.add(plane));
     scene.add(grid);
-    dispatch(setEnemyPlanes(createdPlanes));
+    dispatch(setEnemyPlanes(markedPlanes));
   }
 
   return null;

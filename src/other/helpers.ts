@@ -1,4 +1,5 @@
-import { Vector3 } from 'three';
+import { Mesh, Vector3 } from 'three';
+import { crossMaterial, emptyPositiondMaterial } from './battleMapConfigs';
 import { battlefieldSize, lastBattlefieldRowIndex } from './constants';
 import { RandomArrangingPosition } from './types';
 
@@ -14,7 +15,7 @@ export const getDraggableLimit = (additionalX: number, additionalZ: number) => (
 
 export const getDefaultPositions = (): number[] => new Array(battlefieldSize ** 2).fill(-1);
 
-export const getEnemyDefaultPositions = (): number[] =>
+export const getBattlefieldDefaultPositions = (): number[] =>
   new Array(battlefieldSize ** 2).fill(undefined);
 
 export const getRowsFromBattlefieldPositions = (array: RandomArrangingPosition[]) => {
@@ -47,3 +48,11 @@ export const copyTextToClipboard = (text: string) => {
   document.execCommand('copy');
   document.body.removeChild(elem);
 };
+
+export const markTouched3DPlanes = (planes: Mesh[], positions: number[]) =>
+  planes.map((plane, index) => {
+    if (positions[index] !== undefined) {
+      plane.material = positions[index] === -1 ? emptyPositiondMaterial : crossMaterial;
+    }
+    return plane;
+  });
