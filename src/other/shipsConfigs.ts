@@ -60,6 +60,7 @@ const getShipConfig = (shipSize: ShipSize, positionIndex: number): ShipConfig =>
   isTurnedHorizontally: true,
   isPlaced: false,
   planesPositions: [],
+  isShipwreck: false,
 });
 
 const getDefaultShipsConfigs = (additionalX: number = 0, additionalZ: number = 0): ShipConfig[] => {
@@ -73,6 +74,11 @@ const getDefaultShipsConfigs = (additionalX: number = 0, additionalZ: number = 0
     }
   }
   return configs;
+};
+
+export const getShipSizeByIndex = (index: number) => {
+  const sizes = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4];
+  return sizes[index];
 };
 
 export default getDefaultShipsConfigs;

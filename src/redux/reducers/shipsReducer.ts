@@ -10,17 +10,18 @@ import {
   shipMaxRotation,
   shipRotationStep,
   shipsRotationStep,
+  shipwreckXRotation,
 } from '../../other/constants';
 import {
   convertToRadians,
+  findAllIndexes,
   getBattlefieldDefaultPositions,
   getDefaultPositions,
   getSegmentMidpoint,
 } from '../../other/helpers';
 import { arrangeShipsRandomly } from '../../other/shipsArranging';
-import getDefaultShipsConfigs from '../../other/shipsConfigs';
-import { ShipsState } from '../../other/types';
-import { ShipsAction } from '../types';
+import getDefaultShipsConfigs, { getShipSizeByIndex } from '../../other/shipsConfigs';
+import { ShipsAction, ShipsState } from '../types';
 
 const getDefaultState = (): ShipsState => ({
   configs: getDefaultShipsConfigs(),
@@ -166,17 +167,32 @@ const shipsConfigsReducer = (state = defaultState, action: ShipsAction): ShipsSt
   if (action.type === 'MarkMyField') {
     const { mode, selectedPosition, positionInfo } = action.payload;
     state.friendlyBattlefield[selectedPosition] = positionInfo;
+    const shipPositions = findAllIndexes(state.friendlyBattlefield, positionInfo);
+    const configs = state.configs.map((config, index) => {
+      if (
+        positionInfo !== -1 &&
+        shipPositions.length === getShipSizeByIndex(positionInfo) &&
+        index === positionInfo
+      ) {
+        config.isShipwreck = true;
+        if (state.models3D.length) {
+          state.models3D[positionInfo].rotation.x = convertToRadians(shipwreckXRotation);
+        }
+      }
+      return config;
+    });
     if (mode === '3D') {
       state.planes[selectedPosition].material =
         positionInfo === -1 ? emptyPositiondMaterial : crossMaterial;
     } else {
       const arPlane = document.getElementById(`${friendlyArPlaneIdName}${selectedPosition}`);
-      if (!arPlane) {
-        return state;
+      if (arPlane) {
+        const planeTexture = action.payload === -1 ? dotTextureFilePath : crossTextureFilePath;
+        arPlane.setAttribute('src', planeTexture);
+        arPlane.setAttribute('visible', 'true');
       }
-      const planeTexture = action.payload === -1 ? dotTextureFilePath : crossTextureFilePath;
-      arPlane.setAttribute('src', planeTexture);
     }
+    return { ...state, configs };
   }
 
   return state;

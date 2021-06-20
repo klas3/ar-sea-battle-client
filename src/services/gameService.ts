@@ -129,7 +129,6 @@ class GameService {
 
   private onVicktory = () => {
     store.dispatch(dropShipsState());
-    console.log('onVicktory');
     store.dispatch(setGameState('WinnerScreen'));
   };
 

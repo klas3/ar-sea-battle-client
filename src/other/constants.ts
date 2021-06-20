@@ -34,8 +34,10 @@ export const mainMenuCameraConfig = { position: new Vector3(300, 20, -105), far:
 
 export const battleCameraConfig = { position: new Vector3(0, 175, 5), far: 20000 };
 
-export const serverUrl = 'http://localhost:3001';
+export const serverUrl = 'https://ar-sea-battle-server.herokuapp.com/';
 
 export const enemyArPlaneIdName = 'enemyArPlane';
 
 export const friendlyArPlaneIdName = 'friendlyArPlane';
+
+export const shipwreckXRotation = 180;

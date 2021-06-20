@@ -1,13 +1,15 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { Suspense, useCallback, useEffect, useMemo } from 'react';
 import { useThree } from '@react-three/fiber';
-import { MeshBasicMaterial } from 'three';
+import { MeshBasicMaterial, Object3D } from 'three';
 import { planeDefaultHeight, battlePlaneMaterial } from '../other/constants';
 import gridCreator from '../other/gridHelper';
 import { mouse, raycaster } from '../other/tools';
 import { enemyBattlefieldGridName } from '../other/battleMapConfigs';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import { setEnemyPlanes, setSelectedEnemyPosition } from '../redux/actions';
+import { setEnemyPlanes, setSelectedEnemyPosition, addShipwreckModel } from '../redux/actions';
 import { markTouched3DPlanes } from '../other/helpers';
+import ShipInitialization from '../3D/ShipInitialization';
+import LoadingBox from '../3D/LoadingBox';
 
 interface IProps {
   additionalX?: number;
@@ -21,6 +23,8 @@ const Enemy3DBattlefield = (props: IProps) => {
   const turn = useAppSelector((state) => state.game.turn);
   const planes = useAppSelector((state) => state.game.enemyPlanes);
   const gameState = useAppSelector((state) => state.game.state);
+  const shipwrecksConfigs = useAppSelector((state) => state.game.shipwrecksConfigs);
+  const shipwrecksModels = useAppSelector((state) => state.game.shipwrecksModels);
 
   const dispatch = useAppDispatch();
 
@@ -118,7 +122,13 @@ const Enemy3DBattlefield = (props: IProps) => {
     };
   };
 
-  useEffect(addGridInteraction, [markCellOnClick, markCellOnTouch, onDocumentMouseMove]);
+  useEffect(addGridInteraction, [
+    markCellOnClick,
+    markCellOnTouch,
+    onDocumentMouseMove,
+    shipwrecksModels,
+    scene,
+  ]);
 
   if (!planes.length && gameState === 'InGame') {
     const createdPlanes = gridCreator.createPlanes(
@@ -133,7 +143,30 @@ const Enemy3DBattlefield = (props: IProps) => {
     dispatch(setEnemyPlanes(markedPlanes));
   }
 
-  return null;
+  let renderedShips = shipwrecksModels.map((shipScene, index) => (
+    <primitive key={`shipwreck-${index}`} object={shipScene} position={shipScene.position} />
+  ));
+
+  if (shipwrecksConfigs.length !== shipwrecksModels.length) {
+    const addModel = (model3D: Object3D) => dispatch(addShipwreckModel(model3D));
+    const newModels = [];
+    for (let i = 0; i < shipwrecksConfigs.length; i += 1) {
+      const existingModel = shipwrecksModels.find((model) => model.userData.index === i);
+      if (!existingModel) {
+        newModels.push(
+          <ShipInitialization
+            key={`shipwreck-new-${i}`}
+            index={i}
+            config={shipwrecksConfigs[i]}
+            reference={addModel}
+          />,
+        );
+      }
+    }
+    renderedShips = renderedShips.concat(newModels);
+  }
+
+  return <Suspense fallback={<LoadingBox />}>{renderedShips}</Suspense>;
 };
 
 export default Enemy3DBattlefield;

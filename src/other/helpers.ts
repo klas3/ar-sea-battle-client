@@ -56,3 +56,13 @@ export const markTouched3DPlanes = (planes: Mesh[], positions: number[]) =>
     }
     return plane;
   });
+
+export const findAllIndexes = (array: number[], value: number) => {
+  const indexes: number[] = [];
+  array.forEach((arrayValue, index) => {
+    if (arrayValue === value) {
+      indexes.push(index);
+    }
+  });
+  return indexes;
+};

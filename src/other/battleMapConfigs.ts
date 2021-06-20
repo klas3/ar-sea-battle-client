@@ -66,4 +66,4 @@ export const arEnemyPlaneMaterial = `transparent: true; opacity: 0.5; color: ${a
 
 export const arMarkedEnemyPlaneMaterial = `transparent: true; opacity: 0.5;`;
 
-export const arMarkedFriendlyPlaneMaterial = `transparent: true; opacity: 0.5;`;
+export const arMarkedFriendlyPlaneMaterial = `transparent: true;`;

@@ -1,5 +1,3 @@
-import { Object3D } from 'three';
-
 export interface DraggableLimit {
   min: THREE.Vector3;
   max: THREE.Vector3;
@@ -14,16 +12,7 @@ export interface ShipConfig {
   isTurnedHorizontally: boolean;
   isPlaced: boolean;
   planesPositions: number[];
-}
-
-export interface ShipsState {
-  configs: ShipConfig[];
-  models3D: Object3D[];
-  positions: number[];
-  planes: THREE.Mesh[];
-  friendlyBattlefield: number[];
-  friendlyAdditionalX: number;
-  friendlyAdditionalZ: number;
+  isShipwreck: boolean;
 }
 
 export type ShipSize = 'small' | 'medium' | 'large' | 'largest';
@@ -31,6 +20,8 @@ export type ShipSize = 'small' | 'medium' | 'large' | 'largest';
 export type GameMode = '3D' | 'AR';
 
 export type Turn = 'You' | 'Enemy';
+
+export type ARBattlefield = 'friendly' | 'enemy';
 
 export interface RandomArrangingPosition {
   value: number;

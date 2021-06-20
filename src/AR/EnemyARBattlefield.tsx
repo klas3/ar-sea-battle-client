@@ -1,55 +1,21 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import {
   arEnemyBattlefieldPlaneColor,
-  arMarkedEnemyPlaneMaterial,
   arEnemyPlaneMaterial,
-  crossTextureFilePath,
-  dotTextureFilePath,
+  enemyBattlefieldAdditionalX,
+  enemyBattlefieldAdditionalZ,
 } from '../other/battleMapConfigs';
-import { arCoordsСoefficient, enemyArPlaneIdName } from '../other/constants';
-import gridCreator from '../other/gridHelper';
+import { enemyArPlaneIdName } from '../other/constants';
 import { setSelectedEnemyPosition } from '../redux/actions';
 import store from '../redux/store';
+import ARPlanes from './ARPlanes';
+import ARShips from './ARShips';
 
 const EnemyARBattlefield = () => {
-  // TODO: test
-  useAppSelector((state) => state.game.turn);
   const enemyPositions = useAppSelector((state) => state.game.enemyBattlefield);
+  const shipwrecksConfigs = useAppSelector((state) => state.game.shipwrecksConfigs);
   const dispatch = useAppDispatch();
-
-  const planes = useMemo(() => gridCreator.createPlanes(), []);
-
-  const renderedPlanes = planes.map((plane, planeIndex) => {
-    const enemyPosition = enemyPositions[planeIndex];
-    const { index } = plane.userData;
-    const { x, z } = plane.position;
-    const id = `${enemyArPlaneIdName}${index}`;
-    const position = `${x / arCoordsСoefficient} ${0} ${z / arCoordsСoefficient}`;
-    const material =
-      enemyPosition === undefined ? arEnemyPlaneMaterial : arMarkedEnemyPlaneMaterial;
-    const texture =
-      enemyPosition === undefined
-        ? ''
-        : enemyPosition === -1
-        ? dotTextureFilePath
-        : crossTextureFilePath;
-    return (
-      // @ts-ignore
-      <a-box
-        id={id}
-        material={material}
-        key={index}
-        position={position}
-        src={texture}
-        depth="0.2"
-        height="0.01"
-        width="0.2"
-        class="box"
-        clickhandler
-      />
-    );
-  });
 
   useEffect(() => {
     const scene = AFRAME.scenes[0];
@@ -98,7 +64,12 @@ const EnemyARBattlefield = () => {
     <>
       {/* @ts-ignore */}
       <a-entity gltf-model="models/sea.glb" scale="0.013 0.013 0.013" position="0.2 -0.1 -0.2" />
-      {renderedPlanes}
+      <ARShips
+        configs={shipwrecksConfigs}
+        additionalX={enemyBattlefieldAdditionalX}
+        additionalZ={enemyBattlefieldAdditionalZ}
+      />
+      <ARPlanes battlefield={enemyPositions} type="enemy" />
     </>
   );
 };

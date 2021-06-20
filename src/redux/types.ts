@@ -1,5 +1,5 @@
-import { Mesh } from 'three';
-import { GameMode, Turn } from '../other/types';
+import { Mesh, Object3D } from 'three';
+import { ARBattlefield, GameMode, ShipConfig, Turn } from '../other/types';
 
 export type ShipsActionType =
   | 'RotateShip'
@@ -27,7 +27,9 @@ export type AppActionType =
   | 'SetIsLoading'
   | 'SetAppError'
   | 'StartGame'
-  | 'SetTurn';
+  | 'SetTurn'
+  | 'AddShipwreckModel'
+  | 'EmptyShipwrecksModels';
 
 export type GameState =
   | 'InMainMenu'
@@ -44,9 +46,19 @@ export interface ShipsAction {
   payload?: any;
 }
 
+export interface ShipsState {
+  configs: ShipConfig[];
+  models3D: Object3D[];
+  positions: number[];
+  planes: THREE.Mesh[];
+  friendlyBattlefield: number[];
+  friendlyAdditionalX: number;
+  friendlyAdditionalZ: number;
+}
+
 export interface AppState {
   mode: GameMode;
-  selectedARBattlefield: 'friendly' | 'enemy';
+  selectedARBattlefield: ARBattlefield;
   state: GameState;
   enemyBattlefield: number[];
   selectedEnemyPosition: number | undefined;
@@ -54,6 +66,8 @@ export interface AppState {
   enemyPlanes: Mesh[];
   gameCode: string;
   isLoading: boolean;
+  shipwrecksConfigs: ShipConfig[];
+  shipwrecksModels: Object3D[];
   appError: string;
 }
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import EnemyARBattlefield from './EnemyARBattlefield';
-import { setEnemyPlanes, togleBattlefield } from '../redux/actions';
+import { setEnemyPlanes, emptyShipwrecksModels, togleBattlefield } from '../redux/actions';
 import FriendlyARBattlefield from './FriendlyARBattlefield';
 
 const InitialARScene = () => {
@@ -21,6 +21,7 @@ const InitialARScene = () => {
 
   useEffect(() => {
     dispatch(setEnemyPlanes([]));
+    dispatch(emptyShipwrecksModels());
     scene.current = document.getElementsByTagName('a-scene').item(0);
     return () => {
       if (scene.current) {

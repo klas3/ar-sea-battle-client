@@ -1,12 +1,19 @@
 import { AppAction, AppState } from '../types';
-import { getBattlefieldDefaultPositions } from '../../other/helpers';
+import {
+  findAllIndexes,
+  getBattlefieldDefaultPositions,
+  getSegmentMidpoint,
+} from '../../other/helpers';
 import {
   crossMaterial,
   crossTextureFilePath,
   dotTextureFilePath,
   emptyPositiondMaterial,
+  enemyBattlefieldAdditionalX,
 } from '../../other/battleMapConfigs';
 import { enemyArPlaneIdName } from '../../other/constants';
+import getDefaultShipsConfigs, { getShipSizeByIndex } from '../../other/shipsConfigs';
+import gridCreator from '../../other/gridHelper';
 
 const hasGameCode = !window.location.pathname.replace('/', '');
 
@@ -20,6 +27,8 @@ const getDefaultState = (): AppState => ({
   enemyPlanes: [],
   gameCode: window.location.pathname.replace('/', ''),
   isLoading: false,
+  shipwrecksConfigs: [],
+  shipwrecksModels: [],
   appError: '',
 });
 
@@ -51,16 +60,36 @@ const gameReducer = (state = defaultState, action: AppAction): AppState => {
   }
 
   if (action.type === 'MarkEnemyField' && state.selectedEnemyPosition !== undefined) {
-    state.enemyBattlefield[state.selectedEnemyPosition] = action.payload;
+    const positionInfo = action.payload;
+    state.enemyBattlefield[state.selectedEnemyPosition] = positionInfo;
+    const shipPositions = findAllIndexes(state.enemyBattlefield, positionInfo);
+    if (positionInfo !== -1 && shipPositions.length === getShipSizeByIndex(positionInfo)) {
+      const config = getDefaultShipsConfigs()[positionInfo];
+      const planes = gridCreator.createPlanes(undefined, enemyBattlefieldAdditionalX);
+      const markedPlanes = shipPositions.map((position) => planes[position]);
+      const lastPlaneIndex = markedPlanes.length - 1;
+      const firstMarkedPlane = markedPlanes[0];
+      const lastMarkedPlane = markedPlanes[lastPlaneIndex];
+      const { x: firstX, z: firstZ } = firstMarkedPlane.position;
+      const { x: lastX, z: lastZ } = lastMarkedPlane.position;
+      config.position[0] = getSegmentMidpoint(firstX, lastX);
+      config.position[2] = getSegmentMidpoint(firstZ, lastZ);
+      config.rotation =
+        lastMarkedPlane.userData.index - firstMarkedPlane.userData.index < 10 ? 0 : 90;
+      config.isShipwreck = true;
+      state.shipwrecksConfigs.push(config);
+    }
     if (state.mode === '3D') {
       state.enemyPlanes[state.selectedEnemyPosition].material =
-        action.payload === -1 ? emptyPositiondMaterial : crossMaterial;
+        positionInfo === -1 ? emptyPositiondMaterial : crossMaterial;
+      if (positionInfo !== -1) {
+      }
     } else {
       const arPlane = document.getElementById(
         `${enemyArPlaneIdName}${state.selectedEnemyPosition}`,
       );
       if (arPlane) {
-        const planeTexture = action.payload === -1 ? dotTextureFilePath : crossTextureFilePath;
+        const planeTexture = positionInfo === -1 ? dotTextureFilePath : crossTextureFilePath;
         arPlane.setAttribute('src', planeTexture);
       }
     }
@@ -90,6 +119,14 @@ const gameReducer = (state = defaultState, action: AppAction): AppState => {
 
   if (action.type === 'SetTurn') {
     state.turn = action.payload;
+  }
+
+  if (action.type === 'AddShipwreckModel') {
+    state.shipwrecksModels.push(action.payload);
+  }
+
+  if (action.type === 'EmptyShipwrecksModels') {
+    state.shipwrecksModels = [];
   }
 
   return state;

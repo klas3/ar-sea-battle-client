@@ -123,3 +123,12 @@ export const setTurn = (turn: Turn): AppAction => ({
   type: 'SetTurn',
   payload: turn,
 });
+
+export const addShipwreckModel = (models: Object3D): AppAction => ({
+  type: 'AddShipwreckModel',
+  payload: models,
+});
+
+export const emptyShipwrecksModels = (): AppAction => ({
+  type: 'EmptyShipwrecksModels',
+});
