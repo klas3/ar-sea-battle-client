@@ -93,7 +93,7 @@ class GameService {
     const { position, positionInfo } = info;
     const { turn, mode } = store.getState().game;
     if (turn === 'You') {
-      store.dispatch(markEnemyField(positionInfo));
+      store.dispatch(markEnemyField(position, positionInfo));
       if (positionInfo === -1) {
         store.dispatch(setTurn('Enemy'));
       }

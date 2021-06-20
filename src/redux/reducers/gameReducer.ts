@@ -60,8 +60,8 @@ const gameReducer = (state = defaultState, action: AppAction): AppState => {
   }
 
   if (action.type === 'MarkEnemyField' && state.selectedEnemyPosition !== undefined) {
-    const positionInfo = action.payload;
-    state.enemyBattlefield[state.selectedEnemyPosition] = positionInfo;
+    const { positionInfo, position } = action.payload;
+    state.enemyBattlefield[position] = positionInfo;
     const shipPositions = findAllIndexes(state.enemyBattlefield, positionInfo);
     if (positionInfo !== -1 && shipPositions.length === getShipSizeByIndex(positionInfo)) {
       const config = getDefaultShipsConfigs()[positionInfo];
@@ -80,14 +80,10 @@ const gameReducer = (state = defaultState, action: AppAction): AppState => {
       state.shipwrecksConfigs.push(config);
     }
     if (state.mode === '3D') {
-      state.enemyPlanes[state.selectedEnemyPosition].material =
+      state.enemyPlanes[position].material =
         positionInfo === -1 ? emptyPositiondMaterial : crossMaterial;
-      if (positionInfo !== -1) {
-      }
     } else {
-      const arPlane = document.getElementById(
-        `${enemyArPlaneIdName}${state.selectedEnemyPosition}`,
-      );
+      const arPlane = document.getElementById(`${enemyArPlaneIdName}${position}`);
       if (arPlane) {
         const planeTexture = positionInfo === -1 ? dotTextureFilePath : crossTextureFilePath;
         arPlane.setAttribute('src', planeTexture);

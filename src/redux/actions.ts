@@ -89,9 +89,9 @@ export const setSelectedEnemyPosition = (position: number | undefined): AppActio
   payload: position,
 });
 
-export const markEnemyField = (positionInfo: number): AppAction => ({
+export const markEnemyField = (position: number, positionInfo: number): AppAction => ({
   type: 'MarkEnemyField',
-  payload: positionInfo,
+  payload: { position, positionInfo },
 });
 
 export const setEnemyPlanes = (planes: Mesh[]): AppAction => ({
