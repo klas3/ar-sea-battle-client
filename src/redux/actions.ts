@@ -1,5 +1,5 @@
 import { Object3D, Mesh } from 'three';
-import { GameMode, Turn } from '../other/types';
+import { ARBattlefield, GameMode, Turn } from '../other/types';
 import { AppAction, GameState, ShipsAction } from './types';
 
 export const rotateShip = (shipIndex: number): ShipsAction => ({
@@ -131,4 +131,9 @@ export const addShipwreckModel = (models: Object3D): AppAction => ({
 
 export const emptyShipwrecksModels = (): AppAction => ({
   type: 'EmptyShipwrecksModels',
+});
+
+export const setARBattlefield = (battlefield: ARBattlefield): AppAction => ({
+  type: 'SetARBattlefield',
+  payload: battlefield,
 });

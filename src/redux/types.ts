@@ -29,7 +29,8 @@ export type AppActionType =
   | 'StartGame'
   | 'SetTurn'
   | 'AddShipwreckModel'
-  | 'EmptyShipwrecksModels';
+  | 'EmptyShipwrecksModels'
+  | 'SetARBattlefield';
 
 export type GameState =
   | 'InMainMenu'

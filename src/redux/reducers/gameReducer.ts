@@ -11,7 +11,7 @@ import {
   emptyPositiondMaterial,
   enemyBattlefieldAdditionalX,
 } from '../../other/battleMapConfigs';
-import { enemyArPlaneIdName } from '../../other/constants';
+import { cordovaPathname, enemyArPlaneIdName } from '../../other/constants';
 import getDefaultShipsConfigs, { getShipSizeByIndex } from '../../other/shipsConfigs';
 import gridCreator from '../../other/gridHelper';
 
@@ -25,7 +25,7 @@ const getDefaultState = (): AppState => ({
   selectedEnemyPosition: undefined,
   turn: 'You',
   enemyPlanes: [],
-  gameCode: window.location.pathname.replace('/', ''),
+  gameCode: window.location.pathname.replace(cordovaPathname, '').replace('/', ''),
   isLoading: false,
   shipwrecksConfigs: [],
   shipwrecksModels: [],
@@ -123,6 +123,10 @@ const gameReducer = (state = defaultState, action: AppAction): AppState => {
 
   if (action.type === 'EmptyShipwrecksModels') {
     state.shipwrecksModels = [];
+  }
+
+  if (action.type === 'SetARBattlefield') {
+    state.selectedARBattlefield = action.payload;
   }
 
   return state;

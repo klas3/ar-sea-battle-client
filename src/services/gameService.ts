@@ -12,6 +12,7 @@ import {
   markMyField,
   setAdditions,
   setAppError,
+  setARBattlefield,
   setGameCode,
   setGameState,
   setTurn,
@@ -21,6 +22,7 @@ import {
   friendlyBattlefieldAdditionalX,
   friendlyBattlefieldAdditionalZ,
 } from '../other/battleMapConfigs';
+import { oceanAudio } from '../other/tools';
 
 class GameService {
   private cameraController: OrbitControls | null = null;
@@ -95,12 +97,14 @@ class GameService {
     if (turn === 'You') {
       store.dispatch(markEnemyField(position, positionInfo));
       if (positionInfo === -1) {
+        store.dispatch(setARBattlefield('friendly'));
         store.dispatch(setTurn('Enemy'));
       }
       return;
     }
     store.dispatch(markMyField(positionInfo, mode, position));
     if (positionInfo === -1) {
+      store.dispatch(setARBattlefield('enemy'));
       store.dispatch(setTurn('You'));
     }
   };
@@ -128,13 +132,19 @@ class GameService {
   };
 
   private onVicktory = () => {
-    store.dispatch(dropShipsState());
+    this.onGameEnd();
     store.dispatch(setGameState('WinnerScreen'));
   };
 
   private onDefeat = () => {
-    store.dispatch(dropShipsState());
+    this.onGameEnd();
     store.dispatch(setGameState('LooserScreen'));
+  };
+
+  private onGameEnd = () => {
+    oceanAudio.pause();
+    oceanAudio.currentTime = 0;
+    store.dispatch(dropShipsState());
   };
 
   private getUserId = () => {

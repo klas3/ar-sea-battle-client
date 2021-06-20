@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { GiStrikingArrows } from 'react-icons/gi';
 import { FaRandom } from 'react-icons/fa';
 import { ImCross } from 'react-icons/im';
+import { MdAudiotrack } from 'react-icons/md';
 import Initial3DScene from './3D/Initial3DScene';
 import InitialARScene from './AR/InitialARScene';
 import { useAppDispatch, useAppSelector } from './hooks/reduxHooks';
@@ -9,6 +10,7 @@ import {} from './other/battleMapConfigs';
 import { arrangeRandomly, setGameMode } from './redux/actions';
 import gameService from './services/gameService';
 import './styles/ui.css';
+import { oceanAudio } from './other/tools';
 
 const App = () => {
   const gameMode = useAppSelector((state) => state.game.mode);
@@ -49,6 +51,15 @@ const App = () => {
     <GiStrikingArrows />
   );
 
+  const togleAudio = () => {
+    if (!oceanAudio.paused) {
+      oceanAudio.pause();
+      return;
+    }
+    oceanAudio.play();
+    oceanAudio.loop = true;
+  };
+
   const shootEnemy = () => {
     if (selectedEnemyPosition === undefined) {
       return;
@@ -81,6 +92,9 @@ const App = () => {
 
   return (
     <>
+      <button className="bottom-left-button" onClick={togleAudio}>
+        <MdAudiotrack />
+      </button>
       {isInGame && <p className="turn">{turnText}</p>}
       {confirmButtonVisibility && (
         <button className="confirm-button" onClick={confirmButtonHandler}>

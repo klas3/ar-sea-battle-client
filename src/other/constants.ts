@@ -41,3 +41,9 @@ export const enemyArPlaneIdName = 'enemyArPlane';
 export const friendlyArPlaneIdName = 'friendlyArPlane';
 
 export const shipwreckXRotation = 180;
+
+export const emptyCodeFieldError = 'Please enter the game code';
+
+export const cordovaPathname = 'android_asset/www/index.html';
+
+export const oceanAudioFilePath = 'audio/ocean.mp3';

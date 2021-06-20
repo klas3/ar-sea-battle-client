@@ -4,7 +4,7 @@ button {
   margin: 1em;
   z-index: 1;
   background-color: #4d5f87;
-  font-size: 1.3vw;
+  font-size: max(calc((1.9vw + 1.9vh) / 2), 17px);
   padding-left: 1em;
   padding-right: 1em;
   padding-top: 0.4em;
@@ -36,6 +36,10 @@ input::placeholder {
   top: 0;
 }
 
+.bottom-left-button {
+  bottom: 0;
+}
+
 .confirm-button {
   bottom: 0;
   right: 0;
@@ -44,7 +48,7 @@ input::placeholder {
 .change-battlefield-button {
   right: 0;
   top: 0;
-  margin-right: 6vw;
+  margin-right: max(7.5vw, 80px);
 }
 
 .first-menu-item {
@@ -87,7 +91,7 @@ input::placeholder {
   right: 0;
   margin: 0.3em;
   text-align: center;
-  font-size: 3vw;
+  font-size: max(calc((4.5vw + 4.5vh) / 2), 35px);
   color: #3b555c;
 }
 
@@ -118,4 +122,16 @@ input::placeholder {
   top: 64%;
   left: 50%;
   font-size: calc((1.8vw + 1.8vh) / 2);
+}
+
+.copyright {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0.3em;
+  text-align: center;
+  font-size: max(calc((1vw + 1vh) / 2), 15px);
+  color: #3b555c;
 }

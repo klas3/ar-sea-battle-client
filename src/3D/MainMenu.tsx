@@ -2,6 +2,7 @@ import { useEffect, ChangeEvent } from 'react';
 import { MdKeyboardBackspace } from 'react-icons/md';
 import Url from 'url-parse';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { emptyCodeFieldError } from '../other/constants';
 import { copyTextToClipboard } from '../other/helpers';
 import {
   emptyShipsModels,
@@ -38,7 +39,13 @@ const MainMenu = () => {
     dispatch(setGameState('JoiningRoom'));
   };
 
-  const onJoinButtonClick = async () => gameService.joinGame(gameCode);
+  const onJoinButtonClick = async () => {
+    if (!gameCode) {
+      dispatch(setAppError(emptyCodeFieldError));
+      return;
+    }
+    await gameService.joinGame(gameCode);
+  };
 
   const onBackButtonClick = () => dispatch(setGameState('InMainMenu'));
 
@@ -123,6 +130,7 @@ const MainMenu = () => {
       {createGame}
       {joinGame}
       {backButton}
+      <p className="copyright">© 2021 Ivan Shapovalov</p>
     </>
   );
 };
