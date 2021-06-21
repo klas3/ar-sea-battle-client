@@ -1,9 +1,8 @@
 import { useEffect, ChangeEvent } from 'react';
 import { MdKeyboardBackspace } from 'react-icons/md';
 import { AiOutlineQuestionCircle } from 'react-icons/ai';
-import Url from 'url-parse';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import { emptyCodeFieldError, patternARPathname, serverUrl } from '../other/constants';
+import { clientUrl, emptyCodeFieldError, patternARPathname, serverUrl } from '../other/constants';
 import { copyTextToClipboard } from '../other/helpers';
 import {
   emptyShipsModels,
@@ -54,10 +53,7 @@ const MainMenu = () => {
 
   const onCopyButtonClick = () => copyTextToClipboard(gameCode);
 
-  const onCopyLinkButtonClick = () => {
-    const { protocol, hostname, port } = new Url(document.URL);
-    copyTextToClipboard(`${protocol}//${hostname}${port ? `:${port}` : ''}/${gameCode}`);
-  };
+  const onCopyLinkButtonClick = () => copyTextToClipboard(`${clientUrl}/${gameCode}`);
 
   const onGameCodeTextChange = (event: ChangeEvent<HTMLInputElement>) =>
     dispatch(setGameCode(event.target.value));

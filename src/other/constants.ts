@@ -36,6 +36,8 @@ export const battleCameraConfig = { position: new Vector3(0, 175, 5), far: 20000
 
 export const serverUrl = 'https://ar-sea-battle-server.herokuapp.com';
 
+export const clientUrl = 'https://ar-sea-battle.herokuapp.com'
+
 export const enemyArPlaneIdName = 'enemyArPlane';
 
 export const friendlyArPlaneIdName = 'friendlyArPlane';
