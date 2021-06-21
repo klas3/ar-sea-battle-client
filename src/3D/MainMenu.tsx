@@ -1,8 +1,9 @@
 import { useEffect, ChangeEvent } from 'react';
 import { MdKeyboardBackspace } from 'react-icons/md';
+import { AiOutlineQuestionCircle } from 'react-icons/ai';
 import Url from 'url-parse';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import { emptyCodeFieldError } from '../other/constants';
+import { emptyCodeFieldError, patternARPathname, serverUrl } from '../other/constants';
 import { copyTextToClipboard } from '../other/helpers';
 import {
   emptyShipsModels,
@@ -48,6 +49,8 @@ const MainMenu = () => {
   };
 
   const onBackButtonClick = () => dispatch(setGameState('InMainMenu'));
+
+  const onHintsButtonClick = () => dispatch(setGameState('ViewingHints'));
 
   const onCopyButtonClick = () => copyTextToClipboard(gameCode);
 
@@ -99,7 +102,9 @@ const MainMenu = () => {
     </>
   );
 
-  const backButton = (gameState === 'CreatingRoom' || gameState === 'JoiningRoom') && (
+  const backButton = (gameState === 'CreatingRoom' ||
+    gameState === 'JoiningRoom' ||
+    gameState === 'ViewingHints') && (
     <button className="random-arranging-button" onClick={onBackButtonClick}>
       <MdKeyboardBackspace />
     </button>
@@ -109,6 +114,35 @@ const MainMenu = () => {
     <button className="first-menu-item" onClick={onBackButtonClick}>
       To main menu
     </button>
+  );
+
+  const hintsButton = (gameState === 'InMainMenu' ||
+    gameState === 'CreatingRoom' ||
+    gameState === 'JoiningRoom') && (
+    <button className="bottom-left-button" onClick={onHintsButtonClick}>
+      <AiOutlineQuestionCircle />
+    </button>
+  );
+
+  const hints = gameState === 'ViewingHints' && (
+    <>
+      <p className="hints hint1">
+        <b>Drag and drop</b> to arrange your ships
+      </p>
+      <p className="hints hint2">
+        <b>Click</b> on ship to rotate it
+      </p>
+      <p className="hints hint3">
+        <b>Click</b> on enemy's field to make a shot
+      </p>
+      <p className="hints hint4">
+        <b>Scan</b> the{' '}
+        <a target="_blank" rel="noreferrer" href={`${serverUrl}/${patternARPathname}`}>
+          marker
+        </a>{' '}
+        in AR mode to see your ships
+      </p>
+    </>
   );
 
   useEffect(() => {
@@ -129,6 +163,8 @@ const MainMenu = () => {
       {mainMenu}
       {createGame}
       {joinGame}
+      {hintsButton}
+      {hints}
       {backButton}
       <p className="copyright">© 2021 Ivan Shapovalov</p>
     </>

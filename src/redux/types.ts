@@ -36,6 +36,7 @@ export type GameState =
   | 'InMainMenu'
   | 'CreatingRoom'
   | 'JoiningRoom'
+  | 'ViewingHints'
   | 'Arranging'
   | 'ConfirmedArranging'
   | 'InGame'

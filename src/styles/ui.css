@@ -15,6 +15,50 @@ button {
   text-align: center;
 }
 
+a {
+  text-decoration: none;
+  color: #dcaf5b;
+}
+
+.hints {
+  position: absolute;
+  z-index: 1;
+  background-color: #4d5f87;
+  font-size: max(calc((1.9vw + 1.9vh) / 2), 11px);
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 0.4em;
+  padding-bottom: 0.4em;
+  border-radius: 0.3em;
+  border: 0.08em solid #444;
+  color: white;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  width: 35%;
+  top: 50%;
+  left: 50.3%;
+}
+
+.hint1 {
+  margin-top: 0vw;
+}
+
+.hint2 {
+  margin-top: 4vw;
+}
+
+.hint3 {
+  margin-top: 8vw;
+}
+
+.hint4 {
+  margin-top: 12vw;
+}
+
+.hint-highlight {
+  color: red;
+}
+
 button {
   cursor: pointer;
 }
