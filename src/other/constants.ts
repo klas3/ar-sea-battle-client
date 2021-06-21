@@ -49,3 +49,5 @@ export const cordovaPathname = 'android_asset/www/index.html';
 export const oceanAudioFilePath = 'audio/ocean.mp3';
 
 export const patternARPathname = 'pattern.png';
+
+export const arBattlefieldChangingTimeout = 1000;

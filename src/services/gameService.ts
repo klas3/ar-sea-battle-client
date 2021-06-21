@@ -4,7 +4,7 @@ import axiosClient, { AxiosInstance } from 'axios';
 import { ServerResponse } from '../other/types';
 import { v4 as uuidv4 } from 'uuid';
 import Cookie from 'js-cookie';
-import { serverUrl } from '../other/constants';
+import { arBattlefieldChangingTimeout, serverUrl } from '../other/constants';
 import store from '../redux/store';
 import {
   dropShipsState,
@@ -97,14 +97,17 @@ class GameService {
     if (turn === 'You') {
       store.dispatch(markEnemyField(position, positionInfo));
       if (positionInfo === -1) {
-        store.dispatch(setARBattlefield('friendly'));
+        setTimeout(
+          () => store.dispatch(setARBattlefield('friendly')),
+          arBattlefieldChangingTimeout,
+        );
         store.dispatch(setTurn('Enemy'));
       }
       return;
     }
     store.dispatch(markMyField(positionInfo, mode, position));
     if (positionInfo === -1) {
-      store.dispatch(setARBattlefield('enemy'));
+      setTimeout(() => store.dispatch(setARBattlefield('enemy')), arBattlefieldChangingTimeout);
       store.dispatch(setTurn('You'));
     }
   };
