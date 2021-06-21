@@ -15,7 +15,7 @@ import { cordovaPathname, enemyArPlaneIdName } from '../../other/constants';
 import getDefaultShipsConfigs, { getShipSizeByIndex } from '../../other/shipsConfigs';
 import gridCreator from '../../other/gridHelper';
 
-const hasGameCode = !window.location.pathname.replace('/', '');
+const hasGameCode = !window.location.pathname.replace(cordovaPathname, '').replace('/', '');
 
 const getDefaultState = (): AppState => ({
   mode: '3D',
